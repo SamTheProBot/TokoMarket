@@ -34,9 +34,9 @@ const Signup = () => {
 
   return (
     <>
-      <div className='flex justify-center items-center h-[100vh] w-full bg-back'>
-        <section className='flex flex-col justify-evenly items-center max-w-96 h-[60%] py-12 px-16 rounded-lg border-2 border-dark text-dark'>
-          <h1 className='text-3xl h-[25%] py-4 px-4'>
+      <div className='flex justify-center items-center h-[95vh] w-full bg-back'>
+        <section className='flex flex-col justify-evenly items-center max-w-96 h-[60%] py-8 px-16 rounded-lg border-2 border-dark text-dark'>
+          <h1 className='text-3xl h-[25%] py-2 my-2 px-4'>
             Sign Up to <br /> Get Started
           </h1>
           <form

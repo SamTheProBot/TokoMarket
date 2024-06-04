@@ -22,7 +22,6 @@ const Login = () => {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-
     try {
       axios.post(`/`, cradential);
     } catch (e) {
@@ -32,7 +31,7 @@ const Login = () => {
 
   return (
     <>
-      <div className='flex justify-center items-center h-[100vh] w-full bg-back'>
+      <div className='flex justify-center items-center h-[95vh] w-full bg-back'>
         <section className='flex flex-col justify-evenly items-center max-w-96 h-[55%] py-12 px-12 rounded-lg border-2 border-dark text-dark'>
           <h1 className='text-3xl h-[25%] py-4 px-4'>Welcome Back</h1>
           <form

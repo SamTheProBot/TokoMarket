@@ -7,17 +7,29 @@ import Product from './pages/product';
 import Cheakout from './pages/cheakout';
 import NotFound from './pages/notfound';
 import Footer from './components/footer';
+import Navbar from './components/navbar';
+
+function Nav() {
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route path={'/'} element={<Home />} />
+        <Route path={'/product:id'} element={<Product />} />
+        <Route path={'/cheakout'} element={<Cheakout />} />
+        <Route path={'/*'} element={<NotFound />} />
+      </Routes>
+    </>
+  );
+}
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path={'/'} element={<Home />} />
-        <Route path={'/Signup'} element={<Signup />} />
-        <Route path={'/Login'} element={<Login />} />
-        <Route path={'/Product'} element={<Product />} />
-        <Route path={'/Cheakout'} element={<Cheakout />} />
-        <Route path={'/*'} element={<NotFound />} />
+        <Route path={'/'} element={<Nav />} />
+        <Route path={'/signup'} element={<Signup />} />
+        <Route path={'/login'} element={<Login />} />
       </Routes>
       <Footer />
     </>
