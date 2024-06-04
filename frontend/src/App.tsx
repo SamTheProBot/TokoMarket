@@ -1,3 +1,4 @@
+import './Tailwind.css';
 import { Route, Routes } from 'react-router-dom';
 import Navbar from './components/navbar';
 import Signup from './pages/signup';
@@ -11,14 +12,13 @@ import Footer from './components/footer';
 function App() {
   return (
     <>
-      <Navbar />
       <Routes>
-        <Route path={'/'} element={<Home />} />
+        <Route path={'/Home'} element={<Home />} />
         <Route path={'/Signup'} element={<Signup />} />
         <Route path={'/Login'} element={<Login />} />
         <Route path={'/Product'} element={<Product />} />
         <Route path={'/Cheakout'} element={<Cheakout />} />
-        <Route path={'/NotFound'} element={<NotFound />} />
+        <Route path={'/*'} element={<NotFound />} />
       </Routes>
       <Footer />
     </>

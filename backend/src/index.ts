@@ -1,28 +1,15 @@
-import { Request, Response } from 'express';
-import express from 'express';
+import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import helmet from 'helmet';
 
-const PORT = 5000;
-const app = express();
 dotenv.config();
 
-app.use(express.json());
-app.use(cors());
-app.use(helmet());
+const app: Express = express();
+const port = process.env.PORT || 3000;
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({
-    name: `anigha`,
-    relation: `besti`,
-  });
+  res.send('Wrorking');
 });
 
-const Start = () => {
-  app.listen(PORT, () => {
-    console.log(`server runnig at port ${PORT}`);
-  });
-};
-
-Start();
+app.listen(port, () => {
+  console.log(`[server]: Server is running at http://localhost:${port}`);
+});
