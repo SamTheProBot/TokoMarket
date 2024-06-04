@@ -7,7 +7,9 @@ const Login = () => {
 
   return (
     <>
-      <section className='w-[100vw] h-[100vh] bg-red-500'>hello</section>
+      <div className='h-full w-full'>
+        <section className=''></section>
+      </div>
     </>
   );
 };
