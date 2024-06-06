@@ -3,5 +3,5 @@ import Product from '../model/product';
 
 export const getallproducts = async (req: Request, res: Response) => {
   const getitem = await Product.find({});
-  console.log(getitem);
+  res.status(200).json({ getitem });
 };

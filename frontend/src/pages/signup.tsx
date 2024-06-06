@@ -1,14 +1,10 @@
 import axios from 'axios';
 import { useState } from 'react';
-
-interface userCradential {
-  name: string;
-  email: string;
-  password: string;
-}
+import { IuserCradential } from '../util/types/signup';
+const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Signup = () => {
-  const [cradential, setCradential] = useState<userCradential>({
+  const [cradential, setCradential] = useState<IuserCradential>({
     name: '',
     email: '',
     password: '',
@@ -22,11 +18,10 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     try {
-      axios.post(`/`, cradential);
+      axios.post(`${BACKEND_URL}/signup`, cradential);
     } catch (e) {
       throw e;
     }

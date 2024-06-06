@@ -1,5 +1,6 @@
 import express, { Router } from 'express';
+import { getallproducts } from '../controller/products';
 
-const router: Router = express.Router();
+export const productRouter: Router = express.Router();
 
-router.
+productRouter.get('/getall', getallproducts);
