@@ -1,12 +1,7 @@
 import mongoose from 'mongoose';
-import { Iproducts } from '../util/product';
+import { Iproducts } from '../types/product';
 
-const Product = new mongoose.Schema<Iproducts>({
-  id: {
-    type: Number,
-    unique: true,
-    required: true,
-  },
+const ProductSchema = new mongoose.Schema<Iproducts>({
   name: {
     type: String,
     unique: true,
@@ -31,4 +26,4 @@ const Product = new mongoose.Schema<Iproducts>({
   features: [{ type: String }],
 });
 
-export default mongoose.model('Product', Product);
+export default mongoose.model('ProductSchema', ProductSchema);

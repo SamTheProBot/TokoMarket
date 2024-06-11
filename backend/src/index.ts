@@ -4,9 +4,9 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import cors from 'cors';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
-import { productRouter } from './router/products';
-import { authRouter } from './router/auth';
-
+import { productRoute } from './router/products';
+import { authRoute } from './router/auth';
+import { cartRoute } from './router/cart';
 dotenv.config();
 
 const app: Express = express();
@@ -17,8 +17,9 @@ app.use(helmet());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
 
-app.use('/api/v1/', productRouter);
-app.use('/api/v1/', authRouter);
+app.use('/api/v1/', productRoute);
+app.use('/api/v1/', authRoute);
+app.use('/api/v1/', cartRoute);
 
 const Start = () => {
   app.listen(port, async () => {
