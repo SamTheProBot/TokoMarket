@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
+import { ExtendedRequset } from '../types/express';
 import { IloginUser, IsignupUser } from '../types/user';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
-import dotenv from 'dotenv';
+import CartSchema from '../model/cart';
 import UserSchema from '../model/auth';
+import dotenv from 'dotenv';
 dotenv.config();
 
 export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
@@ -17,15 +19,18 @@ export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
   const hashed = await hash(password, salt);
 
   try {
-    await UserSchema.create({
+    const user = await UserSchema.create({
       name: name,
       email: email,
       password: hashed,
     });
-    const token = jwt.sign({ email: email }, process.env.JWT_TOKEN);
+    const token = jwt.sign(
+      { email: email, _id: user._id },
+      process.env.JWT_TOKEN
+    );
     res.status(200).json({ message: `user created`, token });
   } catch (e) {
-    console.log(`error while creating user ${e.message}`);
+    console.log(`server error while creating`);
   }
 };
 
@@ -42,16 +47,35 @@ export const Userlogin = async (req: Request<IloginUser>, res: Response) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ message: `invalide credentials` });
+      return res.status(400).json({ message: `invalid credentials` });
 
-    const token = jwt.sign({ email: email }, process.env.JWT_TOKEN);
+    const token = jwt.sign(
+      { email: email, _id: user._id },
+      process.env.JWT_TOKEN
+    );
     res.status(200).json({ message: `login successful`, token });
   } catch (e) {
-    res.status(400).json({ message: `error while logging in` });
+    res.status(400).json({ message: `server error while logging` });
   }
 };
 
-export const Test = async (req: Request, res: Response) => {
-  const user = await UserSchema.find({});
-  res.status(200).json(user);
+export const UserRemove = async (req: ExtendedRequset, res: Response) => {
+  const userId = req.user;
+  const { password } = req.body;
+
+  try {
+    const user = await UserSchema.findOne({ _id: userId });
+    if (!user) return res.status(404).json({ message: `user not found` });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(404).json({ message: `invalid credentials` });
+
+    await UserSchema.findOneAndDelete({ _id: userId });
+    await CartSchema.findOneAndDelete({ userId: userId });
+
+    res.status(200).json({ message: `user deleted` });
+  } catch (e) {
+    res.status(404).json({ message: `server error` });
+  }
 };

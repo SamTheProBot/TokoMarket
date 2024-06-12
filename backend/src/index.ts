@@ -7,6 +7,7 @@ import ExpressMongoSanitize from 'express-mongo-sanitize';
 import { productRoute } from './router/products';
 import { authRoute } from './router/auth';
 import { cartRoute } from './router/cart';
+import { cheakoutRoute } from './router/cheakout';
 dotenv.config();
 
 const app: Express = express();
@@ -20,6 +21,7 @@ app.use(express.json());
 app.use('/api/v1/', productRoute);
 app.use('/api/v1/', authRoute);
 app.use('/api/v1/', cartRoute);
+app.use('/api/v1/', cheakoutRoute);
 
 const Start = () => {
   app.listen(port, async () => {
