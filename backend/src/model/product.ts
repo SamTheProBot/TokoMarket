@@ -14,6 +14,7 @@ const ProductSchema = new mongoose.Schema<Iproducts>({
   category: {
     type: String,
     required: true,
+    enum: ['Indoor', 'Outdoor'],
   },
   image: {
     type: String,

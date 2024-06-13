@@ -12,7 +12,7 @@ export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
   const { name, password, email } = req.body;
 
   if (!name || !password || !email) {
-    res.status(400).json({ message: `please provide all the information` });
+    res.status(404).json({ message: `please provide all the information` });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -30,7 +30,7 @@ export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
     );
     res.status(200).json({ message: `user created`, token });
   } catch (e) {
-    console.log(`server error while creating`);
+    res.status(500).json({ message: `server error` });
   }
 };
 
@@ -43,11 +43,11 @@ export const Userlogin = async (req: Request<IloginUser>, res: Response) => {
 
   try {
     const user = await UserSchema.findOne({ email });
-    if (!user) return res.status(400).json({ message: `user not found` });
+    if (!user) return res.status(404).json({ message: `user not found` });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(400).json({ message: `invalid credentials` });
+      return res.status(404).json({ message: `invalid credentials` });
 
     const token = jwt.sign(
       { email: email, _id: user._id },
@@ -55,7 +55,7 @@ export const Userlogin = async (req: Request<IloginUser>, res: Response) => {
     );
     res.status(200).json({ message: `login successful`, token });
   } catch (e) {
-    res.status(400).json({ message: `server error while logging` });
+    res.status(500).json({ message: `server error` });
   }
 };
 
@@ -64,18 +64,18 @@ export const UserRemove = async (req: ExtendedRequset, res: Response) => {
   const { password } = req.body;
 
   try {
-    const user = await UserSchema.findOne({ _id: userId });
+    const user = await UserSchema.findById({ _id: userId });
     if (!user) return res.status(404).json({ message: `user not found` });
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(404).json({ message: `invalid credentials` });
 
-    await UserSchema.findOneAndDelete({ _id: userId });
+    await UserSchema.findByIdAndDelete({ _id: userId });
     await CartSchema.findOneAndDelete({ userId: userId });
 
     res.status(200).json({ message: `user deleted` });
   } catch (e) {
-    res.status(404).json({ message: `server error` });
+    res.status(500).json({ message: `server error` });
   }
 };

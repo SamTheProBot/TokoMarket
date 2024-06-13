@@ -15,7 +15,7 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
 
     res.status(200).json(cartItem);
   } catch (e) {
-    res.status(400).json({ message: 'server error ' });
+    res.status(500).json({ message: 'server error ' });
   }
 };
 
@@ -24,11 +24,11 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
   const userId = req.user._id;
   if (!count || !productId || !userId)
     return res
-      .status(400)
+      .status(404)
       .json({ message: `invalid productId or count or userId` });
 
   try {
-    const getItem = await ProductSchema.findOne({ _id: productId });
+    const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
     let userCart = await CartSchema.findOne({ userId: userId });
@@ -37,9 +37,9 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
     userCart.cart.push({ productId: productId, count: count });
     await userCart.save();
 
-    res.json({ message: 'product added' });
+    res.status(200).json({ message: 'product added' });
   } catch (e) {
-    res.status(404).json({ message: `server error`, error: e.message });
+    res.status(500).json({ message: `server error` });
   }
 };
 
@@ -53,7 +53,7 @@ export const editItem = async (req: ExtendedRequset, res: Response) => {
       .json({ message: `invalid productId or count or userId` });
 
   try {
-    const getItem = await ProductSchema.findOne({ _id: productId });
+    const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
     const userCart = await CartSchema.findOne({ userId: userId });
@@ -64,9 +64,9 @@ export const editItem = async (req: ExtendedRequset, res: Response) => {
       count;
     await userCart.save();
 
-    res.json({ message: 'product updated' });
+    res.status(200).json({ message: 'product updated' });
   } catch (e) {
-    res.status(404).json({ message: `server error`, error: e.message });
+    res.status(500).json({ message: `server error` });
   }
 };
 
@@ -78,7 +78,7 @@ export const removeItem = async (req: ExtendedRequset, res: Response) => {
     return res.status(400).json({ message: `invalid productId and userId` });
 
   try {
-    const getItem = await ProductSchema.findOne({ _id: productId });
+    const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
     const userCart = await CartSchema.findOne({ userId: userId });
@@ -91,8 +91,8 @@ export const removeItem = async (req: ExtendedRequset, res: Response) => {
     userCart.cart.splice(itemIndex, 1);
     await userCart.save();
 
-    res.json({ message: 'product removed' });
+    res.status(200).json({ message: 'product removed' });
   } catch (e) {
-    res.status(404).json({ message: `server error`, error: e.message });
+    res.status(500).json({ message: `server error` });
   }
 };

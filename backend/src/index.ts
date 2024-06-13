@@ -4,10 +4,10 @@ import mongoose from 'mongoose';
 import helmet from 'helmet';
 import cors from 'cors';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
+import cookieParser from 'cookie-parser';
 import { productRoute } from './router/products';
 import { authRoute } from './router/auth';
 import { cartRoute } from './router/cart';
-import { cheakoutRoute } from './router/cheakout';
 dotenv.config();
 
 const app: Express = express();
@@ -17,11 +17,11 @@ app.use(cors());
 app.use(helmet());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
+app.use(cookieParser());
 
-app.use('/api/v1/', productRoute);
-app.use('/api/v1/', authRoute);
-app.use('/api/v1/', cartRoute);
-app.use('/api/v1/', cheakoutRoute);
+app.use('/api/v1/plant/', productRoute);
+app.use('/api/v1/auth/', authRoute);
+app.use('/api/v1/cart/', cartRoute);
 
 const Start = () => {
   app.listen(port, async () => {
