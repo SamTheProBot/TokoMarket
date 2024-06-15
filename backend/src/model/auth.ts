@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { IsignupUser } from '../types/user';
 
-const UserSchema = new mongoose.Schema<IsignupUser>({
+const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, `please provide name`],

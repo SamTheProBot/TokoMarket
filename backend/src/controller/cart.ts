@@ -85,10 +85,14 @@ export const removeItem = async (req: ExtendedRequset, res: Response) => {
     if (!userCart)
       return res.status(404).json({ message: `user's cart not found` });
 
-    const itemIndex = userCart.cart.findIndex((item) => {
-      item.productId.toString() === productId;
-    });
-    userCart.cart.splice(itemIndex, 1);
+    if (userCart.cart.length <= 1) {
+      userCart.deleteOne();
+    } else {
+      const itemIndex = userCart.cart.findIndex((item) => {
+        item.productId.toString() === productId;
+      });
+      userCart.cart.splice(itemIndex, 1);
+    }
     await userCart.save();
 
     res.status(200).json({ message: 'product removed' });

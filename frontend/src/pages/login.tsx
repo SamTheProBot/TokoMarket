@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 interface userCradential {
   email: string;
@@ -7,6 +9,7 @@ interface userCradential {
 }
 
 const Login = () => {
+  const navigate = useNavigate();
   const [cradential, setCradential] = useState<userCradential>({
     email: '',
     password: '',
@@ -20,12 +23,19 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      axios.post(`/`, cradential);
+      const response = await axios.post(
+        `${BACKEND_URL}/auth/login`,
+        cradential
+      );
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        navigate(`/home`);
+      }
     } catch (e) {
-      throw e;
+      alert('Login failed. Please check your credentials and try again.');
     }
   };
 

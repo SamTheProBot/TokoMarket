@@ -20,7 +20,7 @@ export const getProducts = async (req: Request, res: Response) => {
     filter.price = { $lte: parsePrice };
 
     const getitem = await ProductSchema.find(filter)
-      .limit(10)
+      .limit(12)
       .sort({ price: sortOrder })
       .skip(parsePage * 10);
 

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { ExtendedRequset } from '../types/express';
-import { IloginUser, IsignupUser } from '../types/user';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
 import CartSchema from '../model/cart';
@@ -8,11 +7,11 @@ import UserSchema from '../model/auth';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
+export const UserSignup = async (req: Request, res: Response) => {
   const { name, password, email } = req.body;
 
   if (!name || !password || !email) {
-    res.status(404).json({ message: `please provide all the information` });
+    res.status(400).json({ message: `please provide all the information` });
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -34,25 +33,28 @@ export const UserSignup = async (req: Request<IsignupUser>, res: Response) => {
   }
 };
 
-export const Userlogin = async (req: Request<IloginUser>, res: Response) => {
+export const Userlogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.json({ message: `please provide email and passwords` });
+    res.status(400).json({ message: `please provide email and passwords` });
   }
 
   try {
-    const user = await UserSchema.findOne({ email });
-    if (!user) return res.status(404).json({ message: `user not found` });
+    const user = await UserSchema.findOne({ email: email });
+    if (!user) {
+      return res.status(400).json({ message: `user not found` });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
-      return res.status(404).json({ message: `invalid credentials` });
-
+      return res.status(401).json({ message: `invalid credentials` });
+    console.log(isMatch);
     const token = jwt.sign(
       { email: email, _id: user._id },
       process.env.JWT_TOKEN
     );
+
     res.status(200).json({ message: `login successful`, token });
   } catch (e) {
     res.status(500).json({ message: `server error` });

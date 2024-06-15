@@ -6,12 +6,18 @@ const BACKEND_URL = 'http://localhost:5000/api/v1';
 const Home = () => {
   const [data, setData] = useState<IproductsData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState<number>(0);
+  const [category, setCategory] = useState();
+  const [price, setPrice] = useState();
+  const [sort, setSort] = useState();
 
   useEffect(() => {
     const calldata = async () => {
       try {
-        let response = await axios.get(`${BACKEND_URL}/getall`);
-        setData(response.data);
+        let response = await axios.get(`${BACKEND_URL}/plant/getproduct`, {
+          params: { category, price, page, sort },
+        });
+        setData(response.data.getitem);
         setIsLoading(true);
       } catch (e) {
         setIsLoading(false);
@@ -19,7 +25,9 @@ const Home = () => {
       }
     };
     calldata();
-  }, []);
+  }, [page]);
+
+  console.log(data);
 
   const Card: React.FC<IproductsData> = ({ name, price, category, image }) => {
     return (
@@ -52,6 +60,11 @@ const Home = () => {
             ))}
           </>
         )}
+      </section>
+      <section className=''>
+        <button onClick={() => setPage((prev) => prev + 1)}>{`<--`}</button>
+        {page + 1}
+        <button onClick={() => setPage((prev) => prev - 1)}>{`-->`}</button>
       </section>
     </div>
   );

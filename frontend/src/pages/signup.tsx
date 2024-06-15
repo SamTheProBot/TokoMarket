@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { IuserCradential } from '../util/types/signup';
+import { useNavigate } from 'react-router-dom';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [cradential, setCradential] = useState<IuserCradential>({
     name: '',
     email: '',
@@ -18,12 +20,19 @@ const Signup = () => {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      axios.post(`${BACKEND_URL}/signup`, cradential);
+      const response = await axios.post(
+        `${BACKEND_URL}/auth/login`,
+        cradential
+      );
+      if (response.status === 200) {
+        localStorage.setItem('token', response.data.token);
+        navigate(`/home`);
+      }
     } catch (e) {
-      throw e;
+      alert('Login failed. Please check your credentials and try again.');
     }
   };
 
