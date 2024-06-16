@@ -13,8 +13,9 @@ function Nav() {
     <>
       <Navbar />
       <Routes>
+        <Route path={'/'} element={<Home />} />
         <Route path={'/home'} element={<Home />} />
-        <Route path={'/product:id'} element={<Product />} />
+        <Route path={'/product'} element={<Product />} />
         <Route path={'/cheakout'} element={<Cheakout />} />
       </Routes>
     </>

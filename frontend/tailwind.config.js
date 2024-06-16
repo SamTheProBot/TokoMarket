@@ -4,11 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        dark: '#874CCC',
-        mid: '#C65BCF',
+        dark: '#000000',
+        mid: '#179600',
         light: '#F27BBD',
-        back: '#fbfafc',
+        back: '#ffffff',
       },
+    },
+    container: {
+      center: true,
     },
   },
   plugins: [],
