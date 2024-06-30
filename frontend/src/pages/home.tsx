@@ -32,7 +32,7 @@ const Home = () => {
 
   return (
     <>
-      <section className='h-[90vh] w-fullbg-mid pt-[4.5rem]'>
+      <section className='h-[90vh] w-full bg-mid pt-[4.5rem]'>
         <div className=' bg-[url(/imageClip.jpg)] flex justify-center items-center overflow-hidden bg-cover bg-center bg-no-repeat relative h-full w-full backdrop-blur-lg'>
           <div className='h-[40%] w-[50%] text-light flex flex-col justify-evenly items-center text-xl font-normal font-heading'>
             <span className='tracking-widest text-7xl'>VERDANT MARKET</span>
