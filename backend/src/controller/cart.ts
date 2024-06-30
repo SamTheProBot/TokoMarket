@@ -9,7 +9,9 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
   if (!userId) return res.status(404).json({ message: 'invalid userId' });
 
   try {
-    const cartItem = await CartSchema.find({ _id: userId });
+    const cartItem = await CartSchema.find({
+      userId: userId,
+    });
     if (cartItem.length <= 0)
       return res.status(200).json({ message: 'cart is empty' });
 
@@ -34,7 +36,10 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
     let userCart = await CartSchema.findOne({ userId: userId });
     if (!userCart) userCart = await CartSchema.create({ userId: userId });
 
-    userCart.cart.push({ productId: productId, count: count });
+    if (userCart.cart.filter((item) => item.productId === productId))
+      userCart.cart.find((item) => item.productId === productId).count += count;
+    else userCart.cart.push({ productId: productId, count: count });
+
     await userCart.save();
 
     res.status(200).json({ message: 'product added' });
@@ -70,32 +75,25 @@ export const editItem = async (req: ExtendedRequset, res: Response) => {
   }
 };
 
-export const removeItem = async (req: ExtendedRequset, res: Response) => {
-  const { productId } = req.body;
+export const clearItem = async (req: ExtendedRequset, res: Response) => {
   const userId = req.user;
 
-  if (!productId || !userId)
-    return res.status(400).json({ message: `invalid productId and userId` });
+  if (!userId) return res.status(400).json({ message: `invalid userId` });
 
   try {
-    const getItem = await ProductSchema.findById({ _id: productId });
-    if (!getItem) return res.status(404).json({ message: 'product not found' });
-
     const userCart = await CartSchema.findOne({ userId: userId });
+
     if (!userCart)
       return res.status(404).json({ message: `user's cart not found` });
 
     if (userCart.cart.length <= 1) {
       userCart.deleteOne();
     } else {
-      const itemIndex = userCart.cart.findIndex((item) => {
-        item.productId.toString() === productId;
-      });
-      userCart.cart.splice(itemIndex, 1);
+      userCart.cart.splice(0, userCart.cart.length);
     }
     await userCart.save();
 
-    res.status(200).json({ message: 'product removed' });
+    res.status(200).json({ message: 'cart empty' });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }

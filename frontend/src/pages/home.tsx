@@ -1,31 +1,24 @@
 import { useEffect, useState } from 'react';
 import { IproductsData } from '../util/types/products';
+import Product from '../components/product';
 import axios from 'axios';
-import { useScrollTop } from '../hooks/scrollToTop';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Home = () => {
   const [data, setData] = useState<IproductsData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState<number>(0);
-  const [category, setCategory] = useState();
-  const [price, setPrice] = useState();
-  const [sort, setSort] = useState();
-  useScrollTop(page);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [options, setOptions] = useState<any>({
+    page: 1,
+    category: null,
+    price: null,
+    sort: null,
+  });
 
-  const handleNext = () => {
-    if (data.length >= 12) setPage((prev) => prev + 1);
-  };
-  const handlePrev = () => {
-    if (page >= 1) {
-      setPage((prev) => prev - 1);
-    }
-  };
   useEffect(() => {
     const calldata = async () => {
       try {
-        let response = await axios.get(`${BACKEND_URL}/plant/getproduct`, {
-          params: { category, price, page, sort },
+        let response = await axios.get(`${BACKEND_URL}/getproduct`, {
+          params: { ...options },
         });
         setData(response.data.getitem);
         setIsLoading(true);
@@ -35,48 +28,41 @@ const Home = () => {
       }
     };
     calldata();
-  }, [page]);
-
-  const Card: React.FC<IproductsData> = ({ name, price, category, image }) => {
-    return (
-      <>
-        <article className='flex flex-col w-[100%] justify-center items-center bg-light shadow-md rounded-lg p-4 h-fit'>
-          <div className=' h-auto '>
-            <img src={image} alt={name} className=' aspect-[3/4] h-64' />
-          </div>
-          <div className='flex flex-row justify-evenly w-full min-h-10'>
-            <div className='flex flex-col'>
-              <span>{name}</span>
-              <span>{category}</span>
-            </div>
-            <div>
-              <span>{price}</span>
-            </div>
-          </div>
-        </article>
-      </>
-    );
-  };
+  }, [options.page]);
 
   return (
-    <div className='bg-[url(/home.jpg)] bg-cover bg-center bg-no-repeat'>
-      <div className='p-16 h-auto flex flex-col justify-center items-center backdrop-brightness-50 backdrop-blur-sm'>
-        <section className='grid grid-col-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 min-h-[100vh]'>
-          {isLoading && (
-            <>
-              {data?.map((plant) => (
-                <Card key={plant.id} {...plant} />
-              ))}
-            </>
-          )}
-        </section>
-        <section className=''>
-          <button onClick={handlePrev}>{`<--`}</button>
-          {page + 1}
-          <button onClick={handleNext}>{`-->`}</button>
-        </section>
-      </div>
-    </div>
+    <>
+      <section className='h-[90vh] w-fullbg-mid pt-[4.5rem]'>
+        <div className=' bg-[url(/imageClip.jpg)] flex justify-center items-center overflow-hidden bg-cover bg-center bg-no-repeat relative h-full w-full backdrop-blur-lg'>
+          <div className='h-[40%] w-[50%] text-light flex flex-col justify-evenly items-center text-xl font-normal font-heading'>
+            <span className='tracking-widest text-7xl'>VERDANT MARKET</span>
+            <span className='font-normal'>one spot for all plants</span>
+            <br />
+            <button className='w-48 h-12 bg-dark rounded-sm font-normal'>
+              Shop now
+            </button>
+          </div>
+        </div>
+      </section>
+      <section className='h-[37vh] w-full flex justify-center items-center bg-light dark:bg-dark text-dark dark:text-light font-light font-context mb-3'>
+        <div className='h-[60%] w-[45%] flex flex-col justify-around items-center'>
+          <div className='font-normal text-2xl tracking-widest'>
+            OUR COLLECTION
+          </div>
+          <div className=' text-center'>
+            I'm a paragraph. Click here to add your own text and edit me. It's
+            easy. Just click “Edit Text” or double click me to add your own
+            content and make changes to the font. I'm a great place for you to
+            tell a story and let your users know a little more about you.
+          </div>
+        </div>
+      </section>
+      <section className='grid grid-cols-3 gap-3 bg-mid dark:bg-dark'>
+        {data.map((item) => {
+          return <Product {...item}></Product>;
+        })}
+      </section>
+    </>
   );
 };
 

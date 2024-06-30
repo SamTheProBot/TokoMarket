@@ -1,18 +1,16 @@
 import axios from 'axios';
+import { FRAMER_AUTH } from '../util/animation/auth';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { IuserLoginCradential } from '../util/types/auth';
 import { useNavigate, Link } from 'react-router-dom';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
-interface userCradential {
-  email: string;
-  password: string;
-}
-
 const Login = () => {
   const navigate = useNavigate();
-  const [cradential, setCradential] = useState<userCradential>({
-    email: '',
-    password: '',
+  const [cradential, setCradential] = useState<IuserLoginCradential>({
+    email: 'gsameer478@gmail.com',
+    password: 'sameer',
   });
 
   const handleChange = (e: any) => {
@@ -28,11 +26,14 @@ const Login = () => {
     try {
       const response = await axios.post(
         `${BACKEND_URL}/auth/login`,
-        cradential
+        cradential,
+        {
+          withCredentials: true,
+        }
       );
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
-        navigate(`/home`);
+        navigate(`/`);
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');
@@ -41,47 +42,58 @@ const Login = () => {
 
   return (
     <>
-      <div className=' bg-[url(/login.jpg)] bg-cover bg-center bg-no-repeat '>
-        <div className='flex justify-center items-center h-[94vh] w-full backdrop-brightness-50 backdrop-blur-sm'>
-          <section className='flex flex-col justify-evenly items-center min-w-[30rem] h-[26rem] py-12 backdrop-blur-lg px-12 rounded-md border-2 border-dark text-dark backdrop-brightness-150'>
-            <h1 className='text-3xl h-[25%] py-4 px-4'>Welcome Back</h1>
+      <nav className='h-[10vh] w-full text-2xl text-dark dark:text-light bg-mid dark:bg-dark font-heading flex justify-between items-center px-12'>
+        <div className=' tracking-wider'>VERDANT MARKET</div>
+        <span className='text-xl text-blue-500'>
+          <Link to={`/`}>Skip?</Link>
+        </span>
+      </nav>
+      <AnimatePresence mode='wait'>
+        <motion.section
+          {...FRAMER_AUTH}
+          className='h-[83vh] w-full flex justify-center items-start'>
+          <div className='h-[80%] w-[40%] flex flex-col justify-evenly'>
+            <div className='font-context flex flex-col justify-center items-center'>
+              <h1 className='font-normal text-6xl p-1'>Log In</h1>
+              <h3 className='text-xl font-light p-1'>
+                Don't have an account?
+                <Link to={`/signup`}>
+                  <span className='text-blue-500'> Sign Up</span>
+                </Link>
+              </h3>
+            </div>
             <form
               onSubmit={handleSubmit}
-              className='flex flex-col justify-evenly items-center h-[75%]'>
-              <label className='flex flex-col'>
-                Email
+              className='h-52 flex flex-col justify-evenly items-center'>
+              <div className='h-[65%] flex flex-col justify-evenly items-center'>
                 <input
-                  className='border-mid bg-white px-1 border-2 rounded-[3px]'
-                  type='text'
+                  type='email'
                   name='email'
-                  value={cradential?.email}
                   onChange={handleChange}
+                  value={cradential?.email}
+                  placeholder='Email'
+                  className='p-1 w-64'
                 />
-              </label>
-              <label className='flex flex-col'>
-                Password
                 <input
-                  className='border-mid bg-white px-1 border-2 rounded-[3px]'
                   type='password'
                   name='password'
-                  value={cradential?.password}
                   onChange={handleChange}
+                  value={cradential?.password}
+                  placeholder='Password'
+                  className='p-1 w-64'
                 />
-              </label>
-              <div className='flex flex-col justify-center items-center'>
+              </div>
+              <div className='h-[35%] w-full flex justify-center items-center'>
                 <button
                   type='submit'
-                  className='py-2 px-6 text-back bg-mid rounded-md my-4'>
+                  className='w-40 h-12 rounded-full border-2 border-dark'>
                   Login
                 </button>
-                <Link to={'/signup'} className='text-sm'>
-                  Signup to Tokomarket?
-                </Link>
               </div>
             </form>
-          </section>
-        </div>
-      </div>
+          </div>
+        </motion.section>
+      </AnimatePresence>
     </>
   );
 };

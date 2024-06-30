@@ -1,36 +1,32 @@
 import './Tailwind.css';
 import { Route, Routes } from 'react-router-dom';
-import Signup from './pages/signup';
-import Login from './pages/login';
-import Home from './pages/home';
-import Product from './pages/product';
-import Cheakout from './pages/cheakout';
 import Footer from './components/footer';
 import Navbar from './components/navbar';
-
-function Nav() {
-  return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path={'/'} element={<Home />} />
-        <Route path={'/home'} element={<Home />} />
-        <Route path={'/product'} element={<Product />} />
-        <Route path={'/cheakout'} element={<Cheakout />} />
-      </Routes>
-    </>
-  );
-}
+import Home from './pages/home';
+import Login from './pages/login';
+import Signup from './pages/signup';
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path={'*'} element={<Nav />} />
-        <Route path={'/signup'} element={<Signup />} />
-        <Route path={'/login'} element={<Login />} />
-      </Routes>
-      <Footer />
+      <div className='bg-mid dark:bg-dark'>
+        <div className='max-w-[90vw] container'>
+          <Routes>
+            <Route
+              path={'/'}
+              element={
+                <>
+                  <Navbar />
+                  <Home />
+                </>
+              }
+            />
+            <Route path={'/login'} element={<Login />} />
+            <Route path={'/signup'} element={<Signup />} />
+          </Routes>
+          <Footer />
+        </div>
+      </div>
     </>
   );
 }

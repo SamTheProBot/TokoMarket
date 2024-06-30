@@ -2,12 +2,15 @@
 export default {
   content: ['./main.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    fontFamily: {
+      heading: "'Titillium Web'",
+      context: "'Rubik'",
+    },
     extend: {
       colors: {
-        dark: '#000000',
-        mid: '#179600',
-        light: '#F27BBD',
-        back: '#ffffff',
+        dark: '#141414',
+        mid: '#ebebeb',
+        light: '#ffffff',
       },
     },
     container: {
@@ -15,4 +18,5 @@ export default {
     },
   },
   plugins: [],
+  darkMode: 'class',
 };

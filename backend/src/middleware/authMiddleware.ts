@@ -7,12 +7,12 @@ export const AuthMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  const headerToken = req.headers.authorization;
+  const token = req.cookies.access_token;
 
-  if (!headerToken || typeof headerToken !== 'string')
-    return res.status(404).json({ data: headerToken });
-
-  const token = headerToken.split(' ')[1];
+  if (!token)
+    return res
+      .status(404)
+      .json({ message: `token not present or invalid token` });
 
   try {
     const decode: any = Jwt.verify(token, process.env.JWT_TOKEN);

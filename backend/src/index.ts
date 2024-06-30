@@ -13,13 +13,13 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || process.env.LOCALPORT;
 
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
 app.use(helmet());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/v1/plant/', productRoute);
+app.use('/api/v1/', productRoute);
 app.use('/api/v1/auth/', authRoute);
 app.use('/api/v1/cart/', cartRoute);
 

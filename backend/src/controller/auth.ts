@@ -27,7 +27,17 @@ export const UserSignup = async (req: Request, res: Response) => {
       { email: email, _id: user._id },
       process.env.JWT_TOKEN
     );
-    res.status(200).json({ message: `user created`, token });
+
+    res
+      .status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+      })
+      .json({ message: `user created` });
+
+    console.log(req.cookies.access_token);
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }
@@ -49,13 +59,20 @@ export const Userlogin = async (req: Request, res: Response) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(401).json({ message: `invalid credentials` });
-    console.log(isMatch);
+
     const token = jwt.sign(
       { email: email, _id: user._id },
       process.env.JWT_TOKEN
     );
-
-    res.status(200).json({ message: `login successful`, token });
+    res
+      .status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+      })
+      .json({ message: `login successful` });
+    console.log(req.cookies.access_token);
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }

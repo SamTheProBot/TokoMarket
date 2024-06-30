@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 15px;
 }
 ::-webkit-scrollbar-button {
   display: none;
@@ -20,4 +20,7 @@ body {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+}
+* {
+  @apply transition-colors duration-300;
 }
