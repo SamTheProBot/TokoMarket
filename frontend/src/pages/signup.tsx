@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { useTypedDispatch } from '../app/hooks';
+import { logIn } from '../features/userSlice';
 import { FRAMER_AUTH } from '../util/animation/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IuserSignupCradential } from '../util/types/auth';
@@ -8,6 +10,7 @@ const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Signup = () => {
   const navigate = useNavigate();
+  const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserSignupCradential>({
     name: '',
     email: '',
@@ -35,6 +38,7 @@ const Signup = () => {
       if (response.status === 200) {
         localStorage.setItem('token', response.data.token);
         navigate(`/`);
+        dispatch(logIn());
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');

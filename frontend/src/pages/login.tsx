@@ -4,10 +4,14 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { IuserLoginCradential } from '../util/types/auth';
 import { useNavigate, Link } from 'react-router-dom';
+import { useTypedDispatch } from '../app/hooks';
+import { logIn } from '../features/userSlice';
+
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserLoginCradential>({
     email: 'gsameer478@gmail.com',
     password: 'sameer',
@@ -32,8 +36,8 @@ const Login = () => {
         }
       );
       if (response.status === 200) {
-        localStorage.setItem('token', response.data.token);
         navigate(`/`);
+        dispatch(logIn());
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');

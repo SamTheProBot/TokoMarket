@@ -1,17 +1,23 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FRAMER_PRODUCT_FADE } from '../util/animation/page';
+import { isLoggedIn } from '../features/userSlice';
+import { useTypedSelector } from '../app/hooks';
 
 const Product = ({ image, name, price, _id }: any) => {
   const navigate = useNavigate();
-  // const;
+  const isLogged = useTypedSelector(isLoggedIn);
   const [isHover, setIsHover] = useState<any>(false);
+
   const handleClick: any = () => {
-    navigate(`/product/${_id}`);
+    isLogged ? navigate(`/product/${_id}`) : navigate(`/login`);
   };
 
   return (
     <>
-      <article
+      <motion.article
+        {...FRAMER_PRODUCT_FADE}
         className='bg-mid font-context duration-500'
         onPointerEnter={() => setIsHover(true)}
         onPointerLeave={() => setIsHover(false)}>
@@ -35,7 +41,7 @@ const Product = ({ image, name, price, _id }: any) => {
             Add to Carts
           </button>
         </div>
-      </article>
+      </motion.article>
     </>
   );
 };

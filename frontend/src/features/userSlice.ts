@@ -1,25 +1,29 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../app/store';
 
 interface UserState {
   value: boolean;
-  userId?: string | number;
 }
 
 const initialState: UserState = {
   value: false,
-  userId: undefined,
 };
 
-export const userLogin = createSlice({
-  name: 'login',
+export const UserLogin = createSlice({
+  name: 'logger',
   initialState,
   reducers: {
-    logIn: (state, action) => {
+    logIn: (state) => {
       state.value = true;
-      state.userId = action.payload;
     },
     logOut: (state) => {
       state.value = false;
     },
   },
 });
+
+export const isLoggedIn = (state: RootState) => state.logger.value;
+
+export const { logIn, logOut } = UserLogin.actions;
+
+export default UserLogin.reducer;

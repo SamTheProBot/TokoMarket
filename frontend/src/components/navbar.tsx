@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { isLoggedIn } from '../features/userSlice';
+import { useTypedSelector } from '../app/hooks';
 
 const Navbar = () => {
+  const isLogged = useTypedSelector(isLoggedIn);
   return (
     <>
       <nav className='fixed top-0 h-[4.5rem] w-[90%] z-10 bg-mid dark:bg-dark'>
@@ -12,14 +15,27 @@ const Navbar = () => {
                 <Link to={`/`}>Home</Link>
               </li>
               <li>
-                <Link to={'/'}>Shop</Link>
+                <button>Shop</button>
               </li>
-              <li>
-                <Link to={`/login`}>Log In</Link>
-              </li>
-              <li className='rounded-full bg-dark text-light dark:bg-light dark:text-dark px-6 py-2'>
-                <Link to={`/signup`}>Sign Up</Link>
-              </li>
+              {isLogged ? (
+                <>
+                  <li>
+                    <Link to={`/logout`}>Log Out</Link>
+                  </li>
+                  <li className='rounded-full bg-dark text-light dark:bg-light dark:text-dark px-6 py-2'>
+                    <Link to={`/cart`}>Cart</Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <Link to={`/login`}>Log In</Link>
+                  </li>
+                  <li className='rounded-full bg-dark text-light dark:bg-light dark:text-dark px-6 py-2'>
+                    <Link to={`/signup`}>Sign Up</Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

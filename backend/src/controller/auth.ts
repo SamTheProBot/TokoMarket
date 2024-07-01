@@ -78,10 +78,20 @@ export const Userlogin = async (req: Request, res: Response) => {
   }
 };
 
+export const Userlogout = async (req: ExtendedRequset, res: Response) => {
+  try {
+    res
+      .clearCookie('access_token')
+      .status(200)
+      .json({ message: `logout successful` });
+  } catch (e) {
+    res.status(500).json({ message: `server error` });
+  }
+};
+
 export const UserRemove = async (req: ExtendedRequset, res: Response) => {
   const userId = req.user;
   const { password } = req.body;
-
   try {
     const user = await UserSchema.findById({ _id: userId });
     if (!user) return res.status(404).json({ message: `user not found` });

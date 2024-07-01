@@ -11,8 +11,12 @@ const Product = () => {
   const { pathname } = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [expand, setExpand] = useState<boolean>(false);
-  // const [count, setCount] = useState<number>(1);
+  const [count, setCount] = useState<number>(1);
   const [data, setData] = useState<IproductsData>();
+
+  const handelChange = (e: any) => {
+    setCount(e.target.value);
+  };
 
   useEffect(() => {
     const getitem = async () => {
@@ -76,6 +80,8 @@ const Product = () => {
                   <input
                     type='number'
                     name='count'
+                    onChange={handelChange}
+                    value={count}
                     min={1}
                     max={99}
                     className='w-14 h-10 px-1'

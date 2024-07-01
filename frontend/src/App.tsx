@@ -4,8 +4,10 @@ import Footer from './components/footer';
 import Navbar from './components/navbar';
 import Home from './pages/home';
 import Login from './pages/login';
+import LogOut from './pages/logout';
 import Signup from './pages/signup';
 import Product from './pages/product';
+import Cart from './pages/cart';
 
 function App() {
   const { pathname } = useLocation();
@@ -25,12 +27,22 @@ function App() {
             />
             <Route path={'/login'} element={<Login />} />
             <Route path={'/signup'} element={<Signup />} />
+            <Route path={'/logout'} element={<LogOut />} />
             <Route
-              path={`/product/${pathname}`}
+              path={`/${pathname}`}
               element={
                 <>
                   <Navbar />
                   <Product />
+                </>
+              }
+            />
+            <Route
+              path={'/cart'}
+              element={
+                <>
+                  <Navbar />
+                  <Cart />
                 </>
               }
             />
