@@ -78,14 +78,14 @@ export const Userlogin = async (req: Request, res: Response) => {
   }
 };
 
-export const Userlogout = async (req: ExtendedRequset, res: Response) => {
+export const Userlogout = async (req: ExtendedRequest, res: Response) => {
   try {
     res
-      .clearCookie('access_token')
+      .clearCookie('access_token', { path: '/' })
       .status(200)
-      .json({ message: `logout successful` });
+      .json({ message: 'logout successful' });
   } catch (e) {
-    res.status(500).json({ message: `server error` });
+    res.status(500).json({ message: 'server error' });
   }
 };
 
