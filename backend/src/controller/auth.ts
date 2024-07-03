@@ -34,10 +34,9 @@ export const UserSignup = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
+        maxAge: 1000 * 60 * 60,
       })
       .json({ message: `user created` });
-
-    console.log(req.cookies.access_token);
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }
@@ -70,18 +69,23 @@ export const Userlogin = async (req: Request, res: Response) => {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
+        maxAge: 1000 * 60 * 60,
       })
       .json({ message: `login successful` });
-    console.log(req.cookies.access_token);
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }
 };
 
-export const Userlogout = async (req: ExtendedRequest, res: Response) => {
+export const Userlogout = async (req: ExtendedRequset, res: Response) => {
   try {
     res
-      .clearCookie('access_token', { path: '/' })
+      .cookie('access_token', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'none',
+        expires: new Date(0),
+      })
       .status(200)
       .json({ message: 'logout successful' });
   } catch (e) {
