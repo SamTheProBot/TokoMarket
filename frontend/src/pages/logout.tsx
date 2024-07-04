@@ -1,30 +1,31 @@
+import Confirm from '../components/confirm';
 import axios from 'axios';
 import { FRAMER_AUTH } from '../util/animation/auth';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTypedDispatch } from '../app/hooks';
 import { logOut } from '../features/userSlice';
+import { useState } from 'react';
 
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const LogOut = () => {
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const handleLogout = async () => {
-    // try {
-    dispatch(logOut());
-    navigate(`/`);
-    const response = await axios.post(`${BACKEND_URL}/auth/logout`, {
-      withCredentials: true,
-    });
-    console.log(response.data, response.status);
-    // if (response.status === 200) {
-    // }
-    // } catch (e) {
-    //   alert('Login failed. Please check your credentials and try again.');
-    // }
+    try {
+      const response = await axios.get(`${BACKEND_URL}/auth/logout`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        dispatch(logOut());
+        navigate(`/`);
+      }
+    } catch (e) {
+      alert('LogOut failed. Please check your credentials and try again.');
+    }
   };
 
   return (
@@ -53,13 +54,16 @@ const LogOut = () => {
                 className='w-52 h-12 rounded-full border-2 border-dark'>
                 Log Out
               </button>
-              <button className='w-52 h-12 rounded-full border-2 border-mid dark:border-dark text-mid dark:text-dark bg-dark dark:bg-light'>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className='w-52 h-12 rounded-full border-2 border-mid dark:border-dark text-mid dark:text-dark bg-dark dark:bg-light'>
                 Delete Account
               </button>
             </div>
           </div>
         </motion.section>
       </AnimatePresence>
+      {isOpen ? <Confirm isOpen={setIsOpen} /> : null}
     </>
   );
 };

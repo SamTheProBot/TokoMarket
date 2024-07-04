@@ -6,9 +6,11 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { IuserSignupCradential } from '../util/types/auth';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useCookie } from '../hooks/usecookie';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Signup = () => {
+  const cookie = useCookie(`access_token`);
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserSignupCradential>({
@@ -36,9 +38,8 @@ const Signup = () => {
         }
       );
       if (response.status === 200) {
-        localStorage.setItem('token', response.data.token);
         navigate(`/`);
-        dispatch(logIn());
+        dispatch(logIn(cookie));
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');

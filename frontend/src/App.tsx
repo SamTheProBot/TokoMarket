@@ -1,5 +1,9 @@
 import './Tailwind.css';
 import { Route, Routes, useLocation } from 'react-router-dom';
+import { useTypedDispatch } from './app/hooks';
+import { useCookie } from './hooks/usecookie';
+import { useEffect } from 'react';
+import { initialize } from './features/userSlice';
 import Footer from './components/footer';
 import Navbar from './components/navbar';
 import Home from './pages/home';
@@ -9,7 +13,14 @@ import Signup from './pages/signup';
 import Product from './pages/product';
 import Cart from './pages/cart';
 
-function App() {
+const App = () => {
+  const cookie = useCookie(`access_token`);
+  const dispatch = useTypedDispatch();
+
+  useEffect(() => {
+    dispatch(initialize({ value: cookie !== null, access_token: cookie }));
+  }, [cookie, dispatch]);
+
   const { pathname } = useLocation();
   return (
     <>
@@ -29,7 +40,7 @@ function App() {
             <Route path={'/signup'} element={<Signup />} />
             <Route path={'/logout'} element={<LogOut />} />
             <Route
-              path={`/${pathname}`}
+              path={`product/${pathname.split('/')[2]}`}
               element={
                 <>
                   <Navbar />
@@ -52,6 +63,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
 export default App;

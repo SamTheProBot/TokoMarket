@@ -6,15 +6,17 @@ import { IuserLoginCradential } from '../util/types/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTypedDispatch } from '../app/hooks';
 import { logIn } from '../features/userSlice';
+import { useCookie } from '../hooks/usecookie';
 
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Login = () => {
+  const cookie = useCookie(`access_token`);
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserLoginCradential>({
-    email: 'gsameer478@gmail.com',
-    password: 'sameer',
+    email: 'cosmiclattaee@gmail.com',
+    password: 'anigha',
   });
 
   const handleChange = (e: any) => {
@@ -37,7 +39,7 @@ const Login = () => {
       );
       if (response.status === 200) {
         navigate(`/`);
-        dispatch(logIn());
+        dispatch(logIn(cookie));
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');

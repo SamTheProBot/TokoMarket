@@ -9,6 +9,11 @@ export const AuthMiddleware = (
 ) => {
   const token = req.cookies.access_token;
 
+  // const headerToken = req.headers.authorization;
+  // if (!headerToken || typeof headerToken !== 'string')
+  //   return res.status(404).json({ data: headerToken });
+  // const token = headerToken.split(' ')[1];
+
   if (!token)
     return res
       .status(404)
@@ -16,7 +21,7 @@ export const AuthMiddleware = (
 
   try {
     const decode: any = Jwt.verify(token, process.env.JWT_TOKEN);
-    req.user = decode;
+    req.user = decode._id;
     next();
   } catch (e) {
     console.log(e.message);

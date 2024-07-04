@@ -11,5 +11,5 @@ export const authRoute: Router = express.Router();
 
 authRoute.post('/signup', UserSignup);
 authRoute.post('/login', Userlogin);
-authRoute.delete('/deleteAccount', AuthMiddleware, UserRemove);
-authRoute.delete(`/logout`, Userlogout);
+authRoute.post('/deleteAccount', AuthMiddleware, UserRemove);
+authRoute.get(`/logout`, Userlogout);

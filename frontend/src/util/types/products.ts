@@ -6,7 +6,7 @@ export interface IproductsCard {
 }
 
 export interface IproductsData extends IproductsCard {
-  id: number;
+  _id: number;
   description: string;
   features: string[];
 }

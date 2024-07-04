@@ -1,15 +1,37 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../app/store';
 
 interface UserState {
-  item: string[];
+  item: [
+    {
+      id: string;
+      count: number;
+    }
+  ];
 }
 
 const initialState: UserState = {
-  item: [],
+  item: [
+    {
+      id: '',
+      count: 0,
+    },
+  ],
 };
 
-export const userLogin = createSlice({
-  name: 'login',
+export const userCart = createSlice({
+  name: 'cart',
   initialState,
-  reducers: {},
+  reducers: {
+    AddToCart: (state, action: PayloadAction<string | null>) => {
+      state.value = true;
+      state.access_token = action.payload;
+    },
+    RemoveToCart: (state) => {
+      state.value = false;
+      state.access_token = null;
+    },
+  },
 });
+
+export default userCart.reducer;

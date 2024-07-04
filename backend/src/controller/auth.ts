@@ -31,12 +31,12 @@ export const UserSignup = async (req: Request, res: Response) => {
     res
       .status(200)
       .cookie('access_token', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
         maxAge: 1000 * 60 * 60,
       })
-      .json({ message: `user created` });
+      .json({ message: `user created`, access_token: token });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }
@@ -66,12 +66,12 @@ export const Userlogin = async (req: Request, res: Response) => {
     res
       .status(200)
       .cookie('access_token', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
         maxAge: 1000 * 60 * 60,
       })
-      .json({ message: `login successful` });
+      .json({ message: `login successful`, access_token: token });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }
@@ -80,13 +80,8 @@ export const Userlogin = async (req: Request, res: Response) => {
 export const Userlogout = async (req: ExtendedRequset, res: Response) => {
   try {
     res
-      .cookie('access_token', '', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none',
-        expires: new Date(0),
-      })
       .status(200)
+      .clearCookie('access_token')
       .json({ message: 'logout successful' });
   } catch (e) {
     res.status(500).json({ message: 'server error' });
@@ -107,7 +102,10 @@ export const UserRemove = async (req: ExtendedRequset, res: Response) => {
     await UserSchema.findByIdAndDelete({ _id: userId });
     await CartSchema.findOneAndDelete({ userId: userId });
 
-    res.status(200).json({ message: `user deleted` });
+    res
+      .status(200)
+      .clearCookie('access_token')
+      .json({ message: `user deleted` });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }

@@ -18,6 +18,24 @@ const Product = () => {
     setCount(e.target.value);
   };
 
+  const handelAdditem = async () => {
+    try {
+      const response = await axios.post(
+        `${BACKEND_URL}/cart/additem`,
+        {
+          productId: data?._id,
+          count: count,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) alert(`itemadded`);
+    } catch (e) {
+      throw e;
+    }
+  };
+
   useEffect(() => {
     const getitem = async () => {
       try {
@@ -88,7 +106,9 @@ const Product = () => {
                   />
                 </div>
                 <div className='w-[100%] grid gap-3 font-normal'>
-                  <button className='bg-mid text-dark dark:bg-dark dark:text-mid border-2 border-dark dark:border-mid h-10 w-full rounded-sm'>
+                  <button
+                    onClick={handelAdditem}
+                    className='bg-mid text-dark dark:bg-dark dark:text-mid border-2 border-dark dark:border-mid h-10 w-full rounded-sm'>
                     Add to Cart
                   </button>
                   <button className='bg-dark text-mid dark:bg-mid dark:text-dark h-10 w-full rounded-sm'>

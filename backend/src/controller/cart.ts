@@ -5,17 +5,49 @@ import CartSchema from '../model/cart';
 
 export const getItem = async (req: ExtendedRequset, res: Response) => {
   const userId = req.user;
-
   if (!userId) return res.status(404).json({ message: 'invalid userId' });
 
   try {
-    const cartItem = await CartSchema.find({
+    const cartItem = await CartSchema.findOne({
       userId: userId,
     });
-    if (cartItem.length <= 0)
+
+    if (cartItem.cart.length <= 0)
       return res.status(200).json({ message: 'cart is empty' });
 
-    res.status(200).json(cartItem);
+    const data = await Promise.all(
+      cartItem.cart.map(async (item) => {
+        const product = await ProductSchema.findById(item.productId);
+        return { data: product, count: item.count };
+      })
+    );
+
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json({ message: 'server error ' });
+  }
+};
+
+export const get = async (req: ExtendedRequset, res: Response) => {
+  const userId = `666d86bf18ef157a5213e1f7`;
+  if (!userId) return res.status(404).json({ message: 'invalid userId' });
+
+  try {
+    const cartItem = await CartSchema.findOne({
+      userId: userId,
+    });
+
+    if (cartItem.cart.length <= 0)
+      return res.status(200).json({ message: 'cart is empty' });
+
+    const data = await Promise.all(
+      cartItem.cart.map(async (item) => {
+        const product = await ProductSchema.findById(item.productId);
+        return { data: product, count: item.count };
+      })
+    );
+
+    res.status(200).json(data);
   } catch (e) {
     res.status(500).json({ message: 'server error ' });
   }
@@ -23,7 +55,7 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
 
 export const addItem = async (req: ExtendedRequset, res: Response) => {
   const { productId, count } = req.body;
-  const userId = req.user._id;
+  const userId = req.user;
   if (!count || !productId || !userId)
     return res
       .status(404)
@@ -33,17 +65,22 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
     const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
+    console.log(getItem);
+
     let userCart = await CartSchema.findOne({ userId: userId });
     if (!userCart) userCart = await CartSchema.create({ userId: userId });
 
-    if (userCart.cart.filter((item) => item.productId === productId))
-      userCart.cart.find((item) => item.productId === productId).count += count;
+    console.log(userCart);
+
+    const cartItem = userCart.cart.find((item) => item.productId === productId);
+    if (cartItem) cartItem.count += count;
     else userCart.cart.push({ productId: productId, count: count });
 
     await userCart.save();
 
     res.status(200).json({ message: 'product added' });
   } catch (e) {
+    console.log(e.message);
     res.status(500).json({ message: `server error` });
   }
 };
