@@ -1,6 +1,6 @@
 export interface IproductsCard {
   name: string;
-  price: number;
+  price: number | undefined;
   category: string;
   image: string;
 }

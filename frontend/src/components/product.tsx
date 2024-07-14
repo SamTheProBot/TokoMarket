@@ -38,7 +38,7 @@ const Product = ({ image, name, price, _id }: any) => {
             className={`${
               isHover ? `bg-dark` : `bg-base`
             } w-full text-mid h-10 rounded-sm`}>
-            Add to Carts
+            Add to Cart
           </button>
         </div>
       </motion.article>

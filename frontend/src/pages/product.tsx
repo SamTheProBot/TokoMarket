@@ -5,14 +5,17 @@ import { useLocation } from 'react-router-dom';
 import { IproductsData } from '../util/types/products';
 import Loading from '../components/loading';
 import axios from 'axios';
+import { useTypedDispatch } from '../app/hooks';
+import { addToCart } from '../features/cartSlice';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Product = () => {
+  const dispatch = useTypedDispatch();
   const { pathname } = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [expand, setExpand] = useState<boolean>(false);
   const [count, setCount] = useState<number>(1);
-  const [data, setData] = useState<IproductsData>();
+  const [data, setData] = useState<any>();
 
   const handelChange = (e: any) => {
     setCount(e.target.value);
@@ -30,7 +33,10 @@ const Product = () => {
           withCredentials: true,
         }
       );
-      if (response.status === 200) alert(`itemadded`);
+      if (response.status === 200) {
+        alert(`itemadded`);
+        dispatch(addToCart(data?.price));
+      }
     } catch (e) {
       throw e;
     }
@@ -78,9 +84,9 @@ const Product = () => {
                 <div className='text-sm font-extralight self-start'>
                   <span className='font-normal'>Features: </span>
                   <br />
-                  {data?.features.map(
+                  {/* {data?.features.map(
                     (item) => item.split(' ').join(`-`) + `, `
-                  )}
+                  )} */}
                 </div>
                 <div className='text-3xl self-start'>${data?.price}</div>
                 <div

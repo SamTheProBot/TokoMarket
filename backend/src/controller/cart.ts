@@ -43,7 +43,16 @@ export const get = async (req: ExtendedRequset, res: Response) => {
     const data = await Promise.all(
       cartItem.cart.map(async (item) => {
         const product = await ProductSchema.findById(item.productId);
-        return { data: product, count: item.count };
+        const data = { ...product };
+        // const { name, category, price, image } = data.data._doc;
+        // return {
+        //   name: name,
+        //   category: category,
+        //   price: price,
+        //   image: image,
+        //   count: item.count,
+        // };
+        return { data: data };
       })
     );
 

@@ -1,11 +1,14 @@
 import axios from 'axios';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useTypedSelector } from '../app/hooks';
+import { totalAmount } from '../features/cartSlice';
 
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Cart = () => {
-  const [data, setData] = useState();
+  const amount = useTypedSelector(totalAmount);
+  const [data, setData] = useState<any>();
 
   useEffect(() => {
     const getCartItem = async () => {
@@ -14,7 +17,6 @@ const Cart = () => {
           withCredentials: true,
         });
         setData(response.data);
-        console.log(response.data);
       } catch (e) {
         throw e;
       }
@@ -29,7 +31,7 @@ const Cart = () => {
       <motion.section className='min-h-[93vh] w-full flex justify-center items-center font-context text-dark '>
         <div className='h-[80%] w-[40%]  bg-red-200 flex flex-row justify-evenly items-center'>
           <div className='h-[60%] w-[60%]'>
-            <div className='h-[20] w-full'>
+            <div className='h-[20] w-full py-5'>
               My cart
               <hr />
             </div>
@@ -66,12 +68,12 @@ const Cart = () => {
             </h2>
             <div className='flex justify-between items-center flex-row'>
               <span>Subtotal</span>
-              <span>${}</span>
+              <span>${amount}</span>
             </div>
             <div>
               <div>
                 <h2>Total</h2>
-                <span>${}</span>
+                <span>${amount}</span>
               </div>
               <button onClick={handleClick}></button>
             </div>
