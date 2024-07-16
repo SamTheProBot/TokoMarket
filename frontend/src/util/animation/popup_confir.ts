@@ -35,16 +35,20 @@ export const FRAMER_CONFIR_BACKGROUND = {
 
 export const FRAMER_POPUP = {
   initial: {
-    opacity: 0.3,
+    opacity: 0,
+    y: '50px',
   },
   animate: {
     opacity: 1,
+    y: '0',
   },
   exit: {
-    opacity: 0.3,
+    opacity: 0,
   },
   transition: {
     duration: 0.35,
-    ease: 'easeOut',
+    type: 'spring',
+    stiffness: 150,
+    damping: 10,
   },
 };

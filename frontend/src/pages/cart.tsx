@@ -11,6 +11,17 @@ const Cart = () => {
   const dispatch = useTypedDispatch();
   const [data, setData] = useState<any>();
 
+  const handleClearCart = async () => {
+    try {
+      await axios.delete(`${BACKEND_URL}/cart/clearitem`, {
+        withCredentials: true,
+      });
+      dispatch(clearCart());
+    } catch (e) {
+      throw e;
+    }
+  };
+
   useEffect(() => {
     const getCartItem = async () => {
       try {
@@ -29,7 +40,7 @@ const Cart = () => {
       }
     };
     getCartItem();
-  }, []);
+  }, [handleClearCart, data]);
 
   const handleClick = () => {};
 
@@ -38,11 +49,17 @@ const Cart = () => {
       <motion.section className='h-[93vh] w-full flex justify-center items-center font-context text-dark pt-16'>
         <div className='h-full w-[50%] flex flex-row justify-evenly'>
           <div className='h-full w-[67%]'>
-            <div className='h-[10%] w-full font-heading p-3 text-4xl'>
-              My cart
+            <div className='h-[10%] w-full flex justify-between items-center'>
+              <div className='h-full w-full font-heading p-3 text-4xl'>
+                My cart
+              </div>
+              <div
+                onClick={handleClearCart}
+                className='self-end flex justify-center items-center rounded-md border-2 border-red-500 bg-red-400 h-10 w-10 cursor-pointer'>
+                🗑️
+              </div>
             </div>
             <p className='w-[40%] h-[1px] bg-dark'></p>
-
             <div className='h-[90%] overflow-y-scroll scrollbar-hide'>
               {data?.map((product: any) => {
                 return (

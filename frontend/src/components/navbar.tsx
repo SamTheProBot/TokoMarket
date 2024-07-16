@@ -6,7 +6,7 @@ const Navbar = () => {
   const isLogged = useTypedSelector(isLoggedIn);
   return (
     <>
-      <nav className='fixed top-0 h-[4.5rem] w-[90%] z-10 bg-mid dark:bg-dark'>
+      <nav className='fixed top-0 h-[4.5rem] w-[92%] z-10 bg-mid dark:bg-dark'>
         <div className='h-full w-full text-2xl text-dark dark:text-light bg-mid dark:bg-dark font-heading flex justify-between items-center px-12'>
           <div className=' tracking-wider'>VERDANT MARKET</div>
           <div className='w-[50%] h-full flex justify-end'>
