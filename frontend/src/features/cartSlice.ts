@@ -16,6 +16,9 @@ export const userCart = createSlice({
     addToCart: (state, action: PayloadAction<number>) => {
       if (state.amount != undefined) state.amount += action.payload;
     },
+    clearCart: (state) => {
+      state.amount = 0;
+    },
     removeToCart: (state, action: PayloadAction<number>) => {
       if (state.amount != undefined) state.amount -= action.payload;
     },
@@ -24,6 +27,6 @@ export const userCart = createSlice({
 
 export const totalAmount = (state: RootState) => state.cart.amount;
 
-export const { addToCart, removeToCart } = userCart.actions;
+export const { addToCart, removeToCart, clearCart } = userCart.actions;
 
 export default userCart.reducer;

@@ -74,16 +74,17 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
     const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
-    console.log(getItem);
-
     let userCart = await CartSchema.findOne({ userId: userId });
     if (!userCart) userCart = await CartSchema.create({ userId: userId });
 
-    console.log(userCart);
-
     const cartItem = userCart.cart.find((item) => item.productId === productId);
     if (cartItem) cartItem.count += count;
-    else userCart.cart.push({ productId: productId, count: count });
+    else
+      userCart.cart.push({
+        productId: productId,
+        count: count,
+        price: getItem.price,
+      });
 
     await userCart.save();
 

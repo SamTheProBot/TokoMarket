@@ -17,6 +17,6 @@ export default {
       center: true,
     },
   },
-  plugins: [],
+  plugins: [require('tailwind-scrollbar-hide')],
   darkMode: 'class',
 };
