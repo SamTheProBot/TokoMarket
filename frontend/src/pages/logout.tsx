@@ -7,8 +7,6 @@ import { useTypedDispatch } from '../app/hooks';
 import { logOut } from '../features/userSlice';
 import { useState } from 'react';
 
-const BACKEND_URL = 'http://localhost:5000/api/v1';
-
 const LogOut = () => {
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
@@ -16,9 +14,12 @@ const LogOut = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${BACKEND_URL}/auth/logout`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${window.location.origin}/api/v1/auth/logout`,
+        {
+          withCredentials: true,
+        }
+      );
       if (response.status === 200) {
         dispatch(logOut());
         navigate(`/`);

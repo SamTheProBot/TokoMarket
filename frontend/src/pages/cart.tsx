@@ -6,8 +6,6 @@ import { useTypedSelector, useTypedDispatch } from '../app/hooks';
 import { totalAmount, clearCart, addToCart } from '../features/cartSlice';
 import Loading from '../components/loading';
 
-const BACKEND_URL = 'http://localhost:5000/api/v1';
-
 const Cart = () => {
   const amount = useTypedSelector(totalAmount);
   const dispatch = useTypedDispatch();
@@ -16,7 +14,7 @@ const Cart = () => {
 
   const handleClearCart = async () => {
     try {
-      await axios.delete(`${BACKEND_URL}/cart/clearitem`, {
+      await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
         withCredentials: true,
       });
       dispatch(clearCart());
@@ -28,9 +26,12 @@ const Cart = () => {
   useEffect(() => {
     const getCartItem = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/cart/getitem`, {
-          withCredentials: true,
-        });
+        const response = await axios.get(
+          `${window.location.origin}/api/v1/cart/getitem`,
+          {
+            withCredentials: true,
+          }
+        );
         dispatch(clearCart());
         setData(response.data);
         let total = 0;

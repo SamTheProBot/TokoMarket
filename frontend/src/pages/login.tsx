@@ -8,8 +8,6 @@ import { useTypedDispatch } from '../app/hooks';
 import { logIn } from '../features/userSlice';
 import { useCookie } from '../hooks/usecookie';
 
-const BACKEND_URL = 'http://localhost:5000/api/v1';
-
 const Login = () => {
   const cookie = useCookie(`access_token`);
   const navigate = useNavigate();
@@ -31,7 +29,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/auth/login`,
+        `${window.location.origin}/api/v1/auth/login`,
         cradential,
         {
           withCredentials: true,

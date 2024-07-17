@@ -7,7 +7,6 @@ import { IuserSignupCradential } from '../util/types/auth';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCookie } from '../hooks/usecookie';
-const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Signup = () => {
   const cookie = useCookie(`access_token`);
@@ -31,7 +30,7 @@ const Signup = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/auth/signup`,
+        `${window.location.origin}/api/v1/auth/signup`,
         cradential,
         {
           withCredentials: true,

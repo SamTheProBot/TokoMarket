@@ -6,7 +6,6 @@ import Loading from '../components/loading';
 import axios from 'axios';
 import { useTypedDispatch } from '../app/hooks';
 import { addToCart } from '../features/cartSlice';
-const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Product = () => {
   const dispatch = useTypedDispatch();
@@ -23,7 +22,7 @@ const Product = () => {
   const handelAdditem = async () => {
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/cart/additem`,
+        `${window.location.origin}/api/v1/cart/additem`,
         {
           productId: data?._id,
           count: count,
@@ -45,7 +44,7 @@ const Product = () => {
     const getitem = async () => {
       try {
         const response = await axios.get(
-          `${BACKEND_URL}/${pathname.split('/')[2]}`
+          `${window.location.origin}/api/v1/${pathname.split('/')[2]}`
         );
         setData(response.data);
         setIsLoading(false);

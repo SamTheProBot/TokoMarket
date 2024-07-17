@@ -9,8 +9,6 @@ import {
   FRAMER_CONFIR_BACKGROUND,
 } from '../util/animation/popup_confir';
 
-const BACKEND_URL = 'http://localhost:5000/api/v1';
-
 const Confirm = (setIsOpen: any) => {
   const [password, SetPassword] = useState<string>('');
   const navigate = useNavigate();
@@ -24,7 +22,7 @@ const Confirm = (setIsOpen: any) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/auth/deleteAccount`,
+        `${window.location.origin}/api/v1/auth/deleteAccount`,
         { password: password },
         {
           withCredentials: true,

@@ -6,7 +6,6 @@ import { useScrollTop } from '../hooks/scrollToTop';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loading from '../components/loading';
-const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Home = () => {
   useScrollTop();
@@ -29,9 +28,12 @@ const Home = () => {
   useEffect(() => {
     const calldata = async () => {
       try {
-        let response = await axios.get(`${BACKEND_URL}/getproduct`, {
-          params: { ...options },
-        });
+        let response = await axios.get(
+          `${window.location.origin}/api/v1/getproduct`,
+          {
+            params: { ...options },
+          }
+        );
         setData(response.data.getitem);
         setIsLoading(true);
       } catch (e) {
