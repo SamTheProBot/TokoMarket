@@ -12,8 +12,7 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
       userId: userId,
     });
 
-    if (cartItem.cart.length <= 0)
-      return res.status(200).json({ message: 'cart is empty' });
+    if (cartItem.cart.length <= 0) return res.status(200).json([]);
 
     const data = await Promise.all(
       cartItem.cart.map(async (item) => {
@@ -28,39 +27,35 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
   }
 };
 
-// export const get = async (req: ExtendedRequset, res: Response) => {
-//   const userId = `666d86bf18ef157a5213e1f7`;
-//   if (!userId) return res.status(404).json({ message: 'invalid userId' });
-
-//   try {
-//     const cartItem = await CartSchema.findOne({
-//       userId: userId,
-//     });
-
-//     if (cartItem.cart.length <= 0)
-//       return res.status(200).json({ message: 'cart is empty' });
-
-//     const data = await Promise.all(
-//       cartItem.cart.map(async (item) => {
-//         const product = await ProductSchema.findById(item.productId);
-//         const data = { ...product };
-//         // const { name, category, price, image } = data.data._doc;
-//         // return {
-//         //   name: name,
-//         //   category: category,
-//         //   price: price,
-//         //   image: image,
-//         //   count: item.count,
-//         // };
-//         return { data: data };
-//       })
-//     );
-
-//     res.status(200).json(data);
-//   } catch (e) {
-//     res.status(500).json({ message: 'server error ' });
-//   }
-// };
+export const get = async (req: ExtendedRequset, res: Response) => {
+  // const userId = `666d86bf18ef157a5213e1f7`;
+  // if (!userId) return res.status(404).json({ message: 'invalid userId' });
+  // try {
+  //   const cartItem = await CartSchema.findOne({
+  //     userId: userId,
+  //   });
+  //   if (cartItem.cart.length <= 0)
+  //     return res.status(200).json({ message: 'cart is empty' });
+  //   const data = await Promise.all(
+  //     cartItem.cart.map(async (item) => {
+  //       const product = await ProductSchema.findById(item.productId);
+  //       const data = { ...product };
+  //       // const { name, category, price, image } = data.data._doc;
+  //       // return {
+  //       //   name: name,
+  //       //   category: category,
+  //       //   price: price,
+  //       //   image: image,
+  //       //   count: item.count,
+  //       // };
+  //       return { data: data };
+  //     })
+  //   );
+  //   res.status(200).json(data);
+  // } catch (e) {
+  //   res.status(500).json({ message: 'server error ' });
+  // }
+};
 
 export const addItem = async (req: ExtendedRequset, res: Response) => {
   const { productId, count } = req.body;
@@ -132,11 +127,7 @@ export const clearItem = async (req: ExtendedRequset, res: Response) => {
     if (!userCart)
       return res.status(404).json({ message: `user's cart not found` });
 
-    if (userCart.cart.length <= 1) {
-      userCart.deleteOne();
-    } else {
-      userCart.cart.splice(0, userCart.cart.length);
-    }
+    userCart.cart.splice(0, userCart.cart.length);
     await userCart.save();
 
     res.status(200).json({ message: 'cart empty' });

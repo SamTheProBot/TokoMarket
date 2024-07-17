@@ -5,18 +5,26 @@ import axios from 'axios';
 import { useScrollTop } from '../hooks/scrollToTop';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
+import Loading from '../components/loading';
 const BACKEND_URL = 'http://localhost:5000/api/v1';
 
 const Home = () => {
   useScrollTop();
   const [data, setData] = useState<IproductsData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [options, setOptions] = useState<any>({
+  // const [options, setOptions] = useState<any>({
+  //   page: 1,
+  //   category: null,
+  //   price: null,
+  //   sort: null,
+  // });
+
+  const options = {
     page: 1,
     category: null,
     price: null,
     sort: null,
-  });
+  };
 
   useEffect(() => {
     const calldata = async () => {
@@ -67,11 +75,15 @@ const Home = () => {
           </motion.div>
         </AnimatePresence>
       </section>
-      <section className='grid grid-cols-3 gap-3 bg-mid dark:bg-dark'>
-        {data.map((item) => {
-          return <Product {...item}></Product>;
-        })}
-      </section>
+      {isLoading ? (
+        <section className='grid grid-cols-3 gap-3 bg-mid dark:bg-dark'>
+          {data.map((item) => {
+            return <Product {...item}></Product>;
+          })}
+        </section>
+      ) : (
+        <Loading heading='h-[20%]'></Loading>
+      )}
     </>
   );
 };

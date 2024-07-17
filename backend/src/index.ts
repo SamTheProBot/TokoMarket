@@ -18,6 +18,7 @@ app.use(helmet());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
+app.use('/', express.static('../frontend/dist'));
 
 app.use('/api/v1/', productRoute);
 app.use('/api/v1/auth/', authRoute);

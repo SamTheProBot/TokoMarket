@@ -47,7 +47,7 @@ const Confirm = (setIsOpen: any) => {
           {...FRAMER_CONFIR_BACKGROUND}>
           <motion.div
             {...FRAMER_CONFIR}
-            className='absolute top-[50%] right-[20%] transform -translate-x-1/2 -translate-y-1/2 h-[40%] w-[30%] bg-mid dark:bg-dark rounded-md'>
+            className='absolute top-[25%] right-[35%] transform -translate-x-1/2 -translate-y-1/2 h-[40%] w-[30%] bg-mid dark:bg-dark rounded-md'>
             <div className='h-full w-full flex justify-evenly items-center'>
               <form
                 onSubmit={handleSubmit}
@@ -67,6 +67,7 @@ const Confirm = (setIsOpen: any) => {
                     Confirm
                   </button>
                   <button
+                    type='button'
                     className='w-44 h-10 mx-1 rounded-full border-2 border-mid dark:border-dark text-mid dark:text-dark bg-dark dark:bg-light'
                     onClick={() => setIsOpen(false)}>
                     Cancel
