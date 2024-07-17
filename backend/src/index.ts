@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
@@ -13,12 +13,19 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || process.env.LOCALPORT;
 
-app.use(cors({ credentials: true, origin: 'http://localhost:5173' }));
-app.use(helmet());
+app.use(cors());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
-app.use('/', express.static('../frontend/dist'));
+app.use('/', express.static('./public'));
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "img-src 'self' data: https://*.pinimg.com"
+  );
+  next();
+});
+app.use(helmet());
 
 app.use('/api/v1/', productRoute);
 app.use('/api/v1/auth/', authRoute);
