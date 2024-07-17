@@ -34,7 +34,7 @@ app.use('/api/v1/cart/', cartRoute);
 const Start = () => {
   app.listen(port, async () => {
     try {
-      await mongoose.connect(process.env.MONGO_ATLAS),
+      await mongoose.connect(process.env.MONGODB_URI),
         {
           useNewUrlParser: true,
           useCreateIndex: true,
