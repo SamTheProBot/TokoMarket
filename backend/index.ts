@@ -6,9 +6,9 @@ import cors from 'cors';
 import path from 'path';
 import ExpressMongoSanitize from 'express-mongo-sanitize';
 import cookieParser from 'cookie-parser';
-import { productRoute } from './router/products';
-import { authRoute } from './router/auth';
-import { cartRoute } from './router/cart';
+import { productRoute } from './src/router/products';
+import { authRoute } from './src/router/auth';
+import { cartRoute } from './src/router/cart';
 dotenv.config();
 
 const app: Express = express();
