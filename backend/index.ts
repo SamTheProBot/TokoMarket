@@ -18,7 +18,15 @@ app.use(cors());
 app.use(ExpressMongoSanitize());
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, filePath) => {
+      if (path.extname(filePath) === '.js') {
+        res.setHeader('Content-Type', 'application/javascript');
+      }
+    },
+  })
+);
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader(
     'Content-Security-Policy',
