@@ -13,8 +13,8 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserLoginCradential>({
-    email: 'cosmiclattaee@gmail.com',
-    password: 'anigha',
+    email: 'gsameer478@gmail.com',
+    password: 'sameer',
   });
 
   const handleChange = (e: any) => {
