@@ -31,7 +31,7 @@ export const UserSignup = async (req: Request, res: Response) => {
     res
       .status(200)
       .cookie('access_token', token, {
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
         maxAge: 1000 * 60 * 60,
@@ -66,12 +66,22 @@ export const Userlogin = async (req: Request, res: Response) => {
     res
       .status(200)
       .cookie('access_token', token, {
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'none',
         maxAge: 1000 * 60 * 60,
       })
       .json({ message: `login successful`, access_token: token });
+  } catch (e) {
+    res.status(500).json({ message: `server error` });
+  }
+};
+
+export const IsUserLogin = async (req: ExtendedRequset, res: Response) => {
+  try {
+    const token: undefined | string = req.cookies.access_token;
+    if (token != undefined) res.json({ message: `yes` });
+    else res.json({ message: `nope` });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }

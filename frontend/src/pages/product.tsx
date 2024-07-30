@@ -3,17 +3,17 @@ import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import Loading from '../components/loading';
+import { IproductsData } from '../util/types/products';
 import axios from 'axios';
-import { useTypedDispatch } from '../app/hooks';
-import { addToCart } from '../features/cartSlice';
 
 const Product = () => {
-  const dispatch = useTypedDispatch();
   const { pathname } = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [expand, setExpand] = useState<boolean>(false);
   const [count, setCount] = useState<number>(1);
-  const [data, setData] = useState<any>();
+  const [data, setData] = useState<IproductsData>();
+
+  const Backend = `http://localhost:5000`;
 
   const handelChange = (e: any) => {
     setCount(e.target.value);
@@ -22,7 +22,8 @@ const Product = () => {
   const handelAdditem = async () => {
     try {
       const response = await axios.post(
-        `${window.location.origin}/api/v1/cart/additem`,
+        // `${window.location.origin}/api/v1/cart/additem`,
+        `${Backend}/api/v1/cart/additem`,
         {
           productId: data?._id,
           count: count,
@@ -33,7 +34,6 @@ const Product = () => {
       );
       if (response.status === 200) {
         alert(`itemadded`);
-        dispatch(addToCart(data?.price));
       }
     } catch (e) {
       throw e;

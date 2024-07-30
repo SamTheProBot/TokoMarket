@@ -1,6 +1,6 @@
 export const FRAMER_PAGE_TRANSITION = {
   initial: {
-    opacity: 0.3,
+    opacity: 0,
     scale: 0.95,
   },
   animate: {
@@ -8,7 +8,7 @@ export const FRAMER_PAGE_TRANSITION = {
     scale: 1,
   },
   exit: {
-    opacity: 0.3,
+    opacity: 0,
     scale: 0.95,
   },
   transition: {

@@ -1,23 +1,22 @@
 import axios from 'axios';
+import { IproductsData } from '../util/types/products';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
-import { useTypedSelector, useTypedDispatch } from '../app/hooks';
-import { totalAmount, clearCart, addToCart } from '../features/cartSlice';
 import Loading from '../components/loading';
 
+const Backend = `http://localhost:5000`;
+
 const Cart = () => {
-  const amount = useTypedSelector(totalAmount);
-  const dispatch = useTypedDispatch();
   const [isLoading, setLoading] = useState<boolean>(true);
-  const [data, setData] = useState<any>([]);
+  const [data, setData] = useState<IproductsData[]>([]);
 
   const handleClearCart = async () => {
     try {
-      await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
+      // await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
+      await axios.delete(`${Backend}/api/v1/cart/clearitem`, {
         withCredentials: true,
       });
-      dispatch(clearCart());
     } catch (e) {
       throw e;
     }
@@ -27,18 +26,17 @@ const Cart = () => {
     const getCartItem = async () => {
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/cart/getitem`,
+          // `${window.location.origin}/api/v1/cart/getitem`,
+          `${Backend}/api/v1/cart/getitem`,
           {
             withCredentials: true,
           }
         );
-        dispatch(clearCart());
         setData(response.data);
         let total = 0;
         response.data.map(
           (product: any) => (total += product.data.price * product.count)
         );
-        dispatch(addToCart(total));
         setLoading(false);
       } catch (e) {
         throw e;
@@ -106,12 +104,12 @@ const Cart = () => {
                 <p className='w-full h-[1px] bg-dark'></p>
                 <div className='flex justify-between'>
                   <span>Subtotal:</span>
-                  <span>${amount}</span>
+                  <span>${}</span>
                 </div>
                 <div>
                   <div className='flex justify-between'>
                     <span>Total:</span>
-                    <span>${amount}</span>
+                    <span>${}</span>
                   </div>
                   <button
                     onClick={handleClick}

@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCookie } from '../hooks/usecookie';
 
+const Backend = `http://localhost:5000`;
+
 const Signup = () => {
   const cookie = useCookie(`access_token`);
   const navigate = useNavigate();
@@ -30,7 +32,8 @@ const Signup = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${window.location.origin}/api/v1/auth/signup`,
+        // `${window.location.origin}/api/v1/auth/signup`,
+        `${Backend}/api/v1/auth/signup`,
         cradential,
         {
           withCredentials: true,

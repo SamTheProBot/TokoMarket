@@ -2,31 +2,33 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 
 interface UserState {
-  amount: number | undefined;
+  _id: string;
+  name: string;
+  image: string;
+  price: number;
+  count: number;
 }
 
-const initialState: UserState = {
-  amount: 0,
-};
+const initialState: UserState[] = [];
 
 export const userCart = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<number>) => {
-      if (state.amount != undefined) state.amount += action.payload;
+    initialdata: (state, action: PayloadAction<UserState>) => {
+      state.push(action.payload);
     },
-    clearCart: (state) => {
-      state.amount = 0;
+    addItem: (state, action: PayloadAction<UserState>) => {
+      return [...state, action.payload];
     },
-    removeToCart: (state, action: PayloadAction<number>) => {
-      if (state.amount != undefined) state.amount -= action.payload;
+    removeItem: (state, action: PayloadAction<UserState>) => {
+      return state.filter((prod) => prod._id !== action.payload._id);
     },
   },
 });
 
-export const totalAmount = (state: RootState) => state.cart.amount;
+export const cartList = (state: RootState) => state.cart;
 
-export const { addToCart, removeToCart, clearCart } = userCart.actions;
+export const { initialdata, addItem, removeItem } = userCart.actions;
 
 export default userCart.reducer;

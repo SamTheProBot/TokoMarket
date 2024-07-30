@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { IproductsData } from '../util/types/products';
 import Product from '../components/product';
 import axios from 'axios';
@@ -7,29 +7,63 @@ import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loading from '../components/loading';
 
+const Backend = `http://localhost:5000`;
+
 const Home = () => {
-  useScrollTop();
+  const pageRef = useRef<any>();
   const [data, setData] = useState<IproductsData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [options, setOptions] = useState<any>({
-  //   page: 1,
-  //   category: null,
-  //   price: null,
-  //   sort: null,
-  // });
-
-  const options = {
-    page: 1,
+  const [options, setOptions] = useState<any>({
+    page: 0,
     category: null,
     price: null,
     sort: null,
+  });
+  useScrollTop();
+
+  const handleNext = () => {
+    if (data.length <= 12) {
+      setOptions({ ...options, page: (options.page += 1) });
+      setTimeout(() => {
+        if (pageRef.current) {
+          window.scrollTo({
+            top: pageRef.current.offsetTop - 100,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handlePrev = () => {
+    if (options.page > 0) {
+      setOptions({ ...options, page: (options.page -= 1) });
+      setTimeout(() => {
+        if (pageRef.current) {
+          window.scrollTo({
+            top: pageRef.current.offsetTop - 100,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
+    }
+  };
+
+  const handelShop = () => {
+    if (pageRef.current) {
+      window.scrollTo({
+        top: pageRef.current.offsetTop - 100,
+        behavior: 'smooth',
+      });
+    }
   };
 
   useEffect(() => {
     const calldata = async () => {
       try {
         let response = await axios.get(
-          `${window.location.origin}/api/v1/getproduct`,
+          `${Backend}/api/v1/getproduct`,
+          // `${window.location.origin}/api/v1/getproduct`,
           {
             params: { ...options },
           }
@@ -47,7 +81,7 @@ const Home = () => {
   return (
     <>
       <section className='h-[90vh] w-full bg-mid pt-[4.5rem]'>
-        <AnimatePresence>
+        <AnimatePresence mode='wait'>
           <motion.div
             {...FRAMER_PAGE_TRANSITION}
             className=' bg-[url(/imageClip.jpg)] flex justify-center items-center overflow-hidden bg-cover bg-center bg-no-repeat relative h-full w-full backdrop-blur-lg'>
@@ -55,7 +89,9 @@ const Home = () => {
               <span className='tracking-widest text-7xl'>VERDANT MARKET</span>
               <span className='font-normal'>one spot for all plants</span>
               <br />
-              <button className='w-48 h-12 bg-dark rounded-sm font-normal'>
+              <button
+                onClick={handelShop}
+                className='w-48 h-12 bg-dark rounded-sm font-normal'>
                 Shop now
               </button>
             </div>
@@ -78,11 +114,27 @@ const Home = () => {
         </AnimatePresence>
       </section>
       {isLoading ? (
-        <section className='grid grid-cols-3 gap-3 bg-mid dark:bg-dark'>
-          {data.map((item) => {
-            return <Product {...item}></Product>;
-          })}
-        </section>
+        <>
+          <section
+            className='grid sam grid-cols-3 gap-3 bg-mid dark:bg-dark'
+            ref={pageRef}>
+            {data.map((item) => {
+              return <Product {...item}></Product>;
+            })}
+          </section>
+          <section className='bg-mid dark:bg-dark flex justify-center items-center'>
+            <button
+              className='h-10 w-24 m-2 rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
+              onClick={handlePrev}>
+              prev
+            </button>
+            <button
+              className='h-10 w-24 m-2 rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
+              onClick={handleNext}>
+              next
+            </button>
+          </section>
+        </>
       ) : (
         <Loading heading='h-[20%]'></Loading>
       )}
