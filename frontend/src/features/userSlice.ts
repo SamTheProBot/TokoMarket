@@ -2,34 +2,31 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 
 interface UserState {
-  value: boolean;
+  userLogin: boolean;
 }
 
 const initialState: UserState = {
-  value: false,
+  userLogin: false,
 };
 
-export const UserLogin = createSlice({
+export const userLogin = createSlice({
   name: 'logger',
   initialState,
   reducers: {
-    initialize: (
-      state,
-      action: PayloadAction<{ value: boolean; access_token: any }>
-    ) => {
-      state.value = action.payload.value;
+    initialize: (state, action: PayloadAction<{ userLogin: boolean }>) => {
+      state.userLogin = action.payload.userLogin;
     },
     logIn: (state) => {
-      state.value = true;
+      state.userLogin = true;
     },
     logOut: (state) => {
-      state.value = false;
+      state.userLogin = false;
     },
   },
 });
 
-export const isLoggedIn = (state: RootState) => state.logger.value;
+export const isLoggedIn = (state: RootState) => state.logger.userLogin;
 
 export const { logIn, logOut, initialize } = UserLogin.actions;
 
-export default UserLogin.reducer;
+export default userLogin.reducer;

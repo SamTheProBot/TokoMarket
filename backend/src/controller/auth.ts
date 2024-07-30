@@ -80,8 +80,9 @@ export const Userlogin = async (req: Request, res: Response) => {
 export const IsUserLogin = async (req: ExtendedRequset, res: Response) => {
   try {
     const token: undefined | string = req.cookies.access_token;
-    if (token != undefined) res.json({ message: `yes` });
-    else res.json({ message: `nope` });
+    if (token != undefined)
+      res.status(200).json({ message: `user Loggind in`, value: true });
+    else res.status(200).json({ message: `user not present`, value: false });
   } catch (e) {
     res.status(500).json({ message: `server error` });
   }

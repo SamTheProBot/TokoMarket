@@ -9,11 +9,6 @@ export const AuthMiddleware = (
 ) => {
   const token = req.cookies.access_token;
 
-  // const headerToken = req.headers.authorization;
-  // if (!headerToken || typeof headerToken !== 'string')
-  //   return res.status(404).json({ data: headerToken });
-  // const token = headerToken.split(' ')[1];
-
   if (!token)
     return res
       .status(404)

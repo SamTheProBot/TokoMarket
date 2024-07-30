@@ -3,24 +3,35 @@ import { isLoggedIn } from '../features/userSlice';
 import { useTypedSelector } from '../app/hooks';
 
 const Navbar = () => {
+  const handleShop = () => {
+    window.scrollTo({ top: 864, behavior: 'smooth' });
+  };
+
+  const handleHome = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const isLogged = useTypedSelector(isLoggedIn);
   return (
     <>
       <nav className='fixed top-0 h-[4.5rem] w-[92%] z-10 bg-mid dark:bg-dark'>
         <div className='h-full w-full text-2xl text-dark dark:text-light bg-mid dark:bg-dark font-heading flex justify-between items-center px-12'>
           <div className=' tracking-wider'>VERDANT MARKET</div>
-          <div className='w-[50%] h-full flex justify-end'>
+          <div className='w-[55%] h-full flex justify-end'>
             <ul className='w-[60%] h-full flex justify-evenly items-center text-xl'>
-              <li>
+              <li onClick={handleHome}>
                 <Link to={`/`}>Home</Link>
               </li>
               <li>
-                <button>Shop</button>
+                <button onClick={handleShop}>Shop</button>
               </li>
               {isLogged ? (
                 <>
                   <li>
                     <Link to={`/logout`}>Log Out</Link>
+                  </li>
+                  <li className='rounded-full h-8 w-8'>
+                    <img src='shoppingcart.svg' />
                   </li>
                   <li className='rounded-full bg-dark text-light dark:bg-light dark:text-dark px-6 py-2'>
                     <Link to={`/cart`}>Cart</Link>

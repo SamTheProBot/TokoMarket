@@ -118,20 +118,20 @@ const Home = () => {
           <section
             className='grid sam grid-cols-3 gap-3 bg-mid dark:bg-dark'
             ref={pageRef}>
-            {data.map((item) => {
-              return <Product {...item}></Product>;
+            {data.map((item, index) => {
+              return <Product key={index} {...item}></Product>;
             })}
           </section>
           <section className='bg-mid dark:bg-dark flex justify-center items-center'>
             <button
-              className='h-10 w-24 m-2 rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
+              className='h-8 w-20 m-2 flex justify-center items-center rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
               onClick={handlePrev}>
-              prev
+              <img src='chevronsleft.svg' alt='prev' />
             </button>
             <button
-              className='h-10 w-24 m-2 rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
+              className='h-8 w-20 m-2 flex justify-center items-center rounded-sm bg-black dark:bg-mid text-mid dark:text-black'
               onClick={handleNext}>
-              next
+              <img src='chevronsright.svg' alt='next' />
             </button>
           </section>
         </>

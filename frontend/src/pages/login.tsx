@@ -1,17 +1,15 @@
 import axios from 'axios';
+import { useTypedDispatch } from '../app/hooks';
 import { FRAMER_AUTH } from '../util/animation/auth';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 import { IuserLoginCradential } from '../util/types/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import { useTypedDispatch } from '../app/hooks';
 import { logIn } from '../features/userSlice';
-import { useCookie } from '../hooks/usecookie';
 
 const Backend = `http://localhost:5000`;
 
 const Login = () => {
-  const cookie = useCookie(`access_token`);
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
   const [cradential, setCradential] = useState<IuserLoginCradential>({
@@ -40,7 +38,7 @@ const Login = () => {
       );
       if (response.status === 200) {
         navigate(`/`);
-        dispatch(logIn(cookie));
+        dispatch(logIn());
       }
     } catch (e) {
       alert('Login failed. Please check your credentials and try again.');
