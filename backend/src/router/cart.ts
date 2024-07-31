@@ -1,5 +1,12 @@
 import express, { Router } from 'express';
-import { addItem, editItem, clearItem, getItem, get } from '../controller/cart';
+import {
+  addItem,
+  editItem,
+  clearItem,
+  clearCart,
+  getItem,
+  get,
+} from '../controller/cart';
 import { cheakout } from '../controller/cheakout';
 import { AuthMiddleware } from '../middleware/authMiddleware';
 
@@ -8,7 +15,8 @@ export const cartRoute: Router = express.Router();
 cartRoute.get('/getitem', AuthMiddleware, getItem);
 cartRoute.post('/additem', AuthMiddleware, addItem);
 cartRoute.patch('/edititem', AuthMiddleware, editItem);
-cartRoute.delete('/clearitem', AuthMiddleware, clearItem);
+cartRoute.patch('/clearitem', AuthMiddleware, clearItem);
+cartRoute.delete('/clearcart', AuthMiddleware, clearCart);
 cartRoute.get(`/get`, get);
 
 // cartRoute.post(`/cheakout`, AuthMiddleware, cheakout);
