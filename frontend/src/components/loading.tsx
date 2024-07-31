@@ -1,8 +1,9 @@
-const Loading = (height: any) => {
+const Loading = ({ height, context }: { height: any; context: string }) => {
   return (
-    <>
-      <div className={`animate-ping h-[${height}] w-full`}></div>
-    </>
+    <section
+      className={`h-[${height}vh] w-full animate-pulse font-context flex justify-center items-center text-dark pt-16`}>
+      <div className='font-semibold text-5xl'>{context}</div>
+    </section>
   );
 };
 

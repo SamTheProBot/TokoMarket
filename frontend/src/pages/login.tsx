@@ -7,8 +7,6 @@ import { IuserLoginCradential } from '../util/types/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import { logIn } from '../features/userSlice';
 
-const Backend = `http://localhost:5000`;
-
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useTypedDispatch();
@@ -29,19 +27,23 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${Backend}/api/v1/auth/login`,
-        // `${window.location.origin}/api/v1/auth/login`,
+        `${window.location.origin}/api/v1/auth/login`,
         cradential,
         {
           withCredentials: true,
         }
       );
-      if (response.status === 200) {
-        navigate(`/`);
-        dispatch(logIn());
+      switch (response.status) {
+        case 200:
+          navigate('/signup');
+          break;
+        case 201:
+          navigate(`/`);
+          dispatch(logIn());
+          break;
       }
     } catch (e) {
-      alert('Login failed. Please check your credentials and try again.');
+      alert('Login failed. server error');
     }
   };
 

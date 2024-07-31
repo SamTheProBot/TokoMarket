@@ -27,6 +27,6 @@ export const userLogin = createSlice({
 
 export const isLoggedIn = (state: RootState) => state.logger.userLogin;
 
-export const { logIn, logOut, initialize } = UserLogin.actions;
+export const { logIn, logOut, initialize } = userLogin.actions;
 
 export default userLogin.reducer;

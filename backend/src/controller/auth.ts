@@ -16,7 +16,6 @@ export const UserSignup = async (req: Request, res: Response) => {
 
   const salt = await bcrypt.genSalt(10);
   const hashed = await hash(password, salt);
-
   try {
     const user = await UserSchema.create({
       name: name,
@@ -35,9 +34,8 @@ export const UserSignup = async (req: Request, res: Response) => {
       process.env.JWT_TOKEN as string,
       { expiresIn: '30m' }
     );
-
     res
-      .status(200)
+      .status(201)
       .cookie('access_token', access_token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -66,7 +64,7 @@ export const Userlogin = async (req: Request, res: Response) => {
   try {
     const user = await UserSchema.findOne({ email: email });
     if (!user) {
-      return res.status(400).json({ message: `user not found` });
+      return res.status(200).json({ message: `user not found` });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -85,7 +83,7 @@ export const Userlogin = async (req: Request, res: Response) => {
       { expiresIn: '30m' }
     );
     res
-      .status(200)
+      .status(201)
       .cookie('access_token', access_token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -100,7 +98,7 @@ export const Userlogin = async (req: Request, res: Response) => {
       })
       .json({ message: `login successful` });
   } catch (e) {
-    res.status(500).json({ message: `server error` });
+    res.status(500).json({ message: `server error ${e.message}` });
   }
 };
 

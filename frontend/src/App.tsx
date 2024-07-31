@@ -62,7 +62,7 @@ const App = () => {
             <Route path={'/signup'} element={<Signup />} />
             <Route path={'/logout'} element={<LogOut />} />
             <Route
-              path={`product/${pathname.split('/')[2]}`}
+              path={`product/:${pathname.split('/')[2]}`}
               element={
                 <>
                   <Navbar />

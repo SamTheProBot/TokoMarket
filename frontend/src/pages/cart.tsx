@@ -5,19 +5,23 @@ import { useEffect, useState } from 'react';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import Loading from '../components/loading';
 
-const Backend = `http://localhost:5000`;
-
 const Cart = () => {
-  const [isLoading, setLoading] = useState<boolean>(true);
+  const [isLoading, setLoading] = useState<{ value: boolean; context: string }>(
+    {
+      value: true,
+      context: '',
+    }
+  );
   const [data, setData] = useState<IproductsData[]>([]);
+  const [total, setTotal] = useState<number>(0);
 
   const handleClearCart = async () => {
     try {
-      // await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
-      await axios.delete(`${Backend}/api/v1/cart/clearitem`, {
+      await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
         withCredentials: true,
       });
     } catch (e) {
+      console.error('Error clearing cart items:', e);
       throw e;
     }
   };
@@ -26,32 +30,34 @@ const Cart = () => {
     const getCartItem = async () => {
       try {
         const response = await axios.get(
-          // `${window.location.origin}/api/v1/cart/getitem`,
-          `${Backend}/api/v1/cart/getitem`,
+          `${window.location.origin}/api/v1/cart/getitem`,
           {
             withCredentials: true,
           }
         );
-        setData(response.data);
+
         let total = 0;
-        response.data.map(
-          (product: any) => (total += product.data.price * product.count)
-        );
-        setLoading(false);
-      } catch (e) {
-        throw e;
+        response.data.forEach((product: any) => {
+          total += product.price * product.count;
+        });
+        setData(response.data);
+        setTotal(Math.ceil(total));
+        setLoading({ value: false, context: 'loading' });
+      } catch (e: any) {
+        console.error('Error fetching cart items:', e);
+        setLoading({ value: false, context: 'oops! page not found' });
       }
     };
-    getCartItem();
-  }, [handleClearCart, data]);
 
+    getCartItem();
+  }, []);
   const handleClick = () => {};
 
   return (
     <>
       <AnimatePresence>
         {isLoading ? (
-          <Loading height='h-[100%]' />
+          <Loading height='100' context={`${isLoading.context}`} />
         ) : (
           <motion.section
             {...FRAMER_PAGE_TRANSITION}
@@ -75,21 +81,21 @@ const Cart = () => {
                 <div className='h-[90%] overflow-y-scroll scrollbar-hide'>
                   {data.length > 0 ? (
                     data.map((product: any) => (
-                      <div key={product.data.id} className='px-2 py-3'>
+                      <div key={product.id} className='px-2 py-3'>
                         <div className='flex justify-start items-center py-1'>
                           <div className='relative'>
                             <img
-                              src={product.data.image}
-                              alt={product.data.name}
+                              src={product.image}
+                              alt={product.name}
                               className='object-cover object-center h-32 w-32'
                             />
                           </div>
                           <div className='flex flex-col p-2'>
-                            <span>{product.data.name}</span>
-                            <span>${product.data.price}</span>
+                            <span>{product.name}</span>
+                            <span>${product.price}</span>
                           </div>
                         </div>
-                        <div>Total: ${product.data.price * product.count}</div>
+                        <div>Total: ${product.price * product.count}</div>
                       </div>
                     ))
                   ) : (
@@ -104,12 +110,12 @@ const Cart = () => {
                 <p className='w-full h-[1px] bg-dark'></p>
                 <div className='flex justify-between'>
                   <span>Subtotal:</span>
-                  <span>${}</span>
+                  <span>${total}</span>
                 </div>
                 <div>
                   <div className='flex justify-between'>
                     <span>Total:</span>
-                    <span>${}</span>
+                    <span>${total}</span>
                   </div>
                   <button
                     onClick={handleClick}

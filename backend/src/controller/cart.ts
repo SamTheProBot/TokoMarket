@@ -30,7 +30,8 @@ export const getItem = async (req: ExtendedRequset, res: Response) => {
 };
 
 export const get = async (req: ExtendedRequset, res: Response) => {
-  const userId = `666d86bf18ef157a5213e1f7`;
+  const userId = req.user;
+  // const userId = `666d86bf18ef157a5213e1f7`;
   if (!userId) return res.status(404).json({ message: 'invalid userId' });
   try {
     const cartItem = await CartSchema.findOne({

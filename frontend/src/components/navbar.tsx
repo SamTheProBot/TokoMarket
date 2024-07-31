@@ -1,17 +1,20 @@
 import { Link } from 'react-router-dom';
 import { isLoggedIn } from '../features/userSlice';
+import { shopOffset } from '../features/extraSlice';
 import { useTypedSelector } from '../app/hooks';
 
 const Navbar = () => {
+  const offsetTop = useTypedSelector(shopOffset);
+  const isLogged = useTypedSelector(isLoggedIn);
+
   const handleShop = () => {
-    window.scrollTo({ top: 864, behavior: 'smooth' });
+    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
   };
 
   const handleHome = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const isLogged = useTypedSelector(isLoggedIn);
   return (
     <>
       <nav className='fixed top-0 h-[4.5rem] w-[92%] z-10 bg-mid dark:bg-dark'>

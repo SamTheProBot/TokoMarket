@@ -13,8 +13,6 @@ const Product = () => {
   const [count, setCount] = useState<number>(1);
   const [data, setData] = useState<IproductsData>();
 
-  const Backend = `http://localhost:5000`;
-
   const handelChange = (e: any) => {
     setCount(e.target.value);
   };
@@ -22,8 +20,7 @@ const Product = () => {
   const handelAdditem = async () => {
     try {
       const response = await axios.post(
-        // `${window.location.origin}/api/v1/cart/additem`,
-        `${Backend}/api/v1/cart/additem`,
+        `${window.location.origin}/api/v1/cart/additem`,
         {
           productId: data?._id,
           count: count,
@@ -60,7 +57,7 @@ const Product = () => {
       <section className='h-[93vh] w-full bg-mid pt-[4.5rem] flex justify-center font-context font-normal'>
         <AnimatePresence>
           {isLoading ? (
-            <Loading height='h-[100%]' />
+            <Loading height='h-[100%]' context='' />
           ) : (
             <motion.div
               {...FRAMER_PAGE_TRANSITION}
@@ -82,9 +79,9 @@ const Product = () => {
                 <div className='text-sm font-extralight self-start'>
                   <span className='font-normal'>Features: </span>
                   <br />
-                  {/* {data?.features.map(
+                  {data?.features.map(
                     (item) => item.split(' ').join(`-`) + `, `
-                  )} */}
+                  )}
                 </div>
                 <div className='text-3xl self-start'>${data?.price}</div>
                 <div

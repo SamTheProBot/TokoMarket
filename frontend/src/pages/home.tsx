@@ -6,10 +6,11 @@ import { useScrollTop } from '../hooks/scrollToTop';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
 import Loading from '../components/loading';
-
-const Backend = `http://localhost:5000`;
+import { useTypedDispatch } from '../app/hooks';
+import { setOffset } from '../features/extraSlice';
 
 const Home = () => {
+  const dispatch = useTypedDispatch();
   const pageRef = useRef<any>();
   const [data, setData] = useState<IproductsData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -59,11 +60,17 @@ const Home = () => {
   };
 
   useEffect(() => {
+    if (pageRef.current) {
+      const val: number = pageRef.current.offsetTop - 100;
+      dispatch(setOffset(val));
+    }
+  }, [data]);
+
+  useEffect(() => {
     const calldata = async () => {
       try {
         let response = await axios.get(
-          `${Backend}/api/v1/getproduct`,
-          // `${window.location.origin}/api/v1/getproduct`,
+          `${window.location.origin}/api/v1/getproduct`,
           {
             params: { ...options },
           }
@@ -136,7 +143,7 @@ const Home = () => {
           </section>
         </>
       ) : (
-        <Loading heading='h-[20%]'></Loading>
+        <Loading height='h-[20%]' context=''></Loading>
       )}
     </>
   );
