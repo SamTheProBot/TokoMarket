@@ -139,7 +139,6 @@ export const clearItem = async (req: ExtendedRequset, res: Response) => {
 
 export const clearCart = async (req: ExtendedRequset, res: Response) => {
   const userId = req.user;
-
   if (!userId) return res.status(400).json({ message: `invalid userId` });
 
   try {
@@ -153,6 +152,7 @@ export const clearCart = async (req: ExtendedRequset, res: Response) => {
 
     res.status(200).json({ message: 'cart empty' });
   } catch (e) {
+    console.log(e.message);
     res.status(500).json({ message: `server error` });
   }
 };

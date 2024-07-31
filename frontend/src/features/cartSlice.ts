@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
 
-interface UserState {
+export interface UserState {
   _id: string;
   name: string;
   image: string;

@@ -1,63 +1,80 @@
 import axios from 'axios';
+import { useTypedSelector } from '../app/hooks';
+import { cartList } from '../features/cartSlice';
 import { IproductsData } from '../util/types/products';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import Loading from '../components/loading';
 
+const Backend = `http://localhost:5000`;
+
 const Cart = () => {
   const [isLoading, setLoading] = useState<{ value: boolean; context: string }>(
     {
       value: true,
-      context: '',
+      context: 'loading',
     }
   );
   const [data, setData] = useState<IproductsData[]>([]);
   const [total, setTotal] = useState<number>(0);
 
-  const handleClearCart = async () => {
+  const handleRemoveItem = async (productId: string) => {
     try {
-      await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
-        withCredentials: true,
-      });
+      await axios.patch(
+        // `${window.location.origin}/api/v1/cart/clearitem`,
+        `${Backend}/api/v1/cart/clearitem`,
+        {
+          productId: productId,
+        },
+        { withCredentials: true }
+      );
+      getCartItem();
     } catch (e) {
-      console.error('Error clearing cart items:', e);
       throw e;
     }
   };
 
+  const handleClearCart = async () => {
+    try {
+      // await axios.delete(`${window.location.origin}/api/v1/cart/clearitem`, {
+      await axios.delete(`${Backend}/api/v1/cart/clearcart`, {
+        withCredentials: true,
+      });
+    } catch (e) {
+      throw e;
+    }
+  };
+
+  const getCartItem = async () => {
+    try {
+      const response = useTypedSelector(cartList);
+      console.log(response);
+      let total = 0;
+      response.forEach((product: any) => {
+        total += product.price * product.count;
+      });
+      // setData(response);
+      setTotal(Math.ceil(total));
+      setLoading({ value: false, context: '' });
+      console.log(response);
+    } catch (e: any) {
+      console.error('Error fetching cart items:', e);
+      setLoading({ value: false, context: 'oops! page not found' });
+    }
+  };
+
   useEffect(() => {
-    const getCartItem = async () => {
-      try {
-        const response = await axios.get(
-          `${window.location.origin}/api/v1/cart/getitem`,
-          {
-            withCredentials: true,
-          }
-        );
-
-        let total = 0;
-        response.data.forEach((product: any) => {
-          total += product.price * product.count;
-        });
-        setData(response.data);
-        setTotal(Math.ceil(total));
-        setLoading({ value: false, context: 'loading' });
-      } catch (e: any) {
-        console.error('Error fetching cart items:', e);
-        setLoading({ value: false, context: 'oops! page not found' });
-      }
-    };
-
     getCartItem();
   }, []);
+
   const handleClick = () => {};
 
   return (
     <>
       <AnimatePresence>
-        {isLoading ? (
-          <Loading height='100' context={`${isLoading.context}`} />
+        {isLoading.value ? (
+          <Loading height={100} context={`${isLoading.context}`} />
         ) : (
           <motion.section
             {...FRAMER_PAGE_TRANSITION}
@@ -71,8 +88,8 @@ const Cart = () => {
                   {data.length > 0 && (
                     <div
                       onClick={handleClearCart}
-                      className='self-end flex justify-center items-center rounded-md border-2 border-red-500 bg-red-400 h-10 w-10 cursor-pointer'>
-                      🗑️
+                      className='flex justify-center items-center text-dark dark:text-mid rounded-lg bg-red-500 h-8 w-28 p-1 cursor-pointer'>
+                      Clear-Cart
                     </div>
                   )}
                 </div>
@@ -81,21 +98,32 @@ const Cart = () => {
                 <div className='h-[90%] overflow-y-scroll scrollbar-hide'>
                   {data.length > 0 ? (
                     data.map((product: any) => (
-                      <div key={product.id} className='px-2 py-3'>
-                        <div className='flex justify-start items-center py-1'>
-                          <div className='relative'>
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className='object-cover object-center h-32 w-32'
-                            />
+                      <div
+                        key={product.id}
+                        className='flex justify-between items-center'>
+                        <div className='px-2 py-3'>
+                          <div className='flex justify-start items-center py-1'>
+                            <div className='relative'>
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                                className='object-cover object-center h-32 w-32'
+                              />
+                            </div>
+                            <div className='flex flex-col p-2'>
+                              <span>{product.name}</span>
+                              <span>${product.price}</span>
+                            </div>
                           </div>
-                          <div className='flex flex-col p-2'>
-                            <span>{product.name}</span>
-                            <span>${product.price}</span>
-                          </div>
+                          <div>Total: ${product.price * product.count}</div>
                         </div>
-                        <div>Total: ${product.price * product.count}</div>
+                        <div className='self-start m-4'>
+                          <button
+                            onClick={() => handleRemoveItem(product.id)}
+                            className='h-6 w-6'>
+                            <img src='garbage.svg' alt='-' />
+                          </button>
+                        </div>
                       </div>
                     ))
                   ) : (

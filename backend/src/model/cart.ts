@@ -11,7 +11,6 @@ const CartSchema = new mongoose.Schema(
       {
         productId: {
           type: String,
-          unique: true,
           required: true,
         },
         count: {

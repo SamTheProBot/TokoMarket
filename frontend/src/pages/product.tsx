@@ -6,6 +6,8 @@ import Loading from '../components/loading';
 import { IproductsData } from '../util/types/products';
 import axios from 'axios';
 
+const Backend = `http://localhost:5000`;
+
 const Product = () => {
   const { pathname } = useLocation();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -20,7 +22,8 @@ const Product = () => {
   const handelAdditem = async () => {
     try {
       const response = await axios.post(
-        `${window.location.origin}/api/v1/cart/additem`,
+        // `${window.location.origin}/api/v1/cart/additem`,
+        `${Backend}/api/v1/cart/additem`,
         {
           productId: data?._id,
           count: count,
@@ -41,7 +44,8 @@ const Product = () => {
     const getitem = async () => {
       try {
         const response = await axios.get(
-          `${window.location.origin}/api/v1/${pathname.split('/')[2]}`
+          // `${window.location.origin}/api/v1/${pathname.split('/')[2]}`
+          `${Backend}/api/v1/${pathname.split('/')[2]}`
         );
         setData(response.data);
         setIsLoading(false);
@@ -57,7 +61,7 @@ const Product = () => {
       <section className='h-[93vh] w-full bg-mid pt-[4.5rem] flex justify-center font-context font-normal'>
         <AnimatePresence>
           {isLoading ? (
-            <Loading height='h-[100%]' context='' />
+            <Loading height={100} context='' />
           ) : (
             <motion.div
               {...FRAMER_PAGE_TRANSITION}

@@ -1,4 +1,4 @@
-const Loading = ({ height, context }: { height: any; context: string }) => {
+const Loading = ({ height, context }: { height: number; context: string }) => {
   return (
     <section
       className={`h-[${height}vh] w-full animate-pulse font-context flex justify-center items-center text-dark pt-16`}>

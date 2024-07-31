@@ -1,13 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { IproductsData } from '../util/types/products';
-import Product from '../components/product';
-import axios from 'axios';
 import { useScrollTop } from '../hooks/scrollToTop';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
-import Loading from '../components/loading';
 import { useTypedDispatch } from '../app/hooks';
+import { initialdata, UserState } from '../features/cartSlice';
 import { setOffset } from '../features/extraSlice';
+import Loading from '../components/loading';
+import Product from '../components/product';
+import axios from 'axios';
+
+const Backend = `http://localhost:5000`;
 
 const Home = () => {
   const dispatch = useTypedDispatch();
@@ -59,6 +62,15 @@ const Home = () => {
     }
   };
 
+  const getUserCart = async () => {
+    await axios
+      .get<UserState>(`${Backend}/api/v1/cart/getitem`, {
+        withCredentials: true,
+      })
+      .then((response) => dispatch(initialdata(response.data)))
+      .catch((e) => new Error(e));
+  };
+
   useEffect(() => {
     if (pageRef.current) {
       const val: number = pageRef.current.offsetTop - 100;
@@ -70,13 +82,15 @@ const Home = () => {
     const calldata = async () => {
       try {
         let response = await axios.get(
-          `${window.location.origin}/api/v1/getproduct`,
+          // `${window.location.origin}/api/v1/getproduct`,
+          `${Backend}/api/v1/getproduct`,
           {
             params: { ...options },
           }
         );
         setData(response.data.getitem);
         setIsLoading(true);
+        getUserCart();
       } catch (e) {
         setIsLoading(false);
         throw e;
@@ -143,7 +157,7 @@ const Home = () => {
           </section>
         </>
       ) : (
-        <Loading height='h-[20%]' context=''></Loading>
+        <Loading height={100} context=''></Loading>
       )}
     </>
   );
