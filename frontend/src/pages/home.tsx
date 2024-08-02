@@ -9,6 +9,7 @@ import { setOffset } from '../features/extraSlice';
 import Loading from '../components/loading';
 import Product from '../components/product';
 import axios from 'axios';
+import SlidePanal from '../components/sidePanal';
 
 const Backend = `http://localhost:5000`;
 
@@ -64,7 +65,7 @@ const Home = () => {
 
   const getUserCart = async () => {
     await axios
-      .get<UserState>(`${Backend}/api/v1/cart/getitem`, {
+      .get<UserState[]>(`${Backend}/api/v1/cart/getitem`, {
         withCredentials: true,
       })
       .then((response) => dispatch(initialdata(response.data)))
@@ -97,7 +98,7 @@ const Home = () => {
       }
     };
     calldata();
-  }, [options.page]);
+  }, []);
 
   return (
     <>
@@ -119,6 +120,7 @@ const Home = () => {
           </motion.div>
         </AnimatePresence>
       </section>
+      <SlidePanal />
       <section className='h-[37vh] w-full flex justify-center items-center bg-light dark:bg-dark text-dark dark:text-light font-light font-context mb-3'>
         <AnimatePresence>
           <motion.div className='h-[60%] w-[45%] flex flex-col justify-around items-center'>
@@ -162,5 +164,5 @@ const Home = () => {
     </>
   );
 };
-
+//can i write code in neovim?
 export default Home;

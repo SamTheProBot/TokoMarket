@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { isLoggedIn } from '../features/userSlice';
 import { shopOffset } from '../features/extraSlice';
-import { useTypedSelector } from '../app/hooks';
+import { openPanal } from '../features/extraSlice';
+import { useTypedSelector, useTypedDispatch } from '../app/hooks';
 
 const Navbar = () => {
+  const dispatch = useTypedDispatch();
   const offsetTop = useTypedSelector(shopOffset);
   const isLogged = useTypedSelector(isLoggedIn);
 
@@ -33,8 +35,12 @@ const Navbar = () => {
                   <li>
                     <Link to={`/logout`}>Log Out</Link>
                   </li>
-                  <li className='rounded-full h-8 w-8'>
-                    <img src='shoppingcart.svg' />
+                  <li
+                    className='rounded-full h-8 w-8'
+                    onClick={() => dispatch(openPanal())}>
+                    <button>
+                      <img src='shoppingcart.svg' />
+                    </button>
                   </li>
                   <li className='rounded-full bg-dark text-light dark:bg-light dark:text-dark px-6 py-2'>
                     <Link to={`/cart`}>Cart</Link>

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { useTypedSelector } from '../app/hooks';
 import { cartList } from '../features/cartSlice';
-import { IproductsData } from '../util/types/products';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
@@ -10,14 +9,14 @@ import Loading from '../components/loading';
 const Backend = `http://localhost:5000`;
 
 const Cart = () => {
+  const userItem = useTypedSelector(cartList);
+  const [total, setTotal] = useState<number>(0);
   const [isLoading, setLoading] = useState<{ value: boolean; context: string }>(
     {
       value: true,
       context: 'loading',
     }
   );
-  const [data, setData] = useState<IproductsData[]>([]);
-  const [total, setTotal] = useState<number>(0);
 
   const handleRemoveItem = async (productId: string) => {
     try {
@@ -29,7 +28,6 @@ const Cart = () => {
         },
         { withCredentials: true }
       );
-      getCartItem();
     } catch (e) {
       throw e;
     }
@@ -46,27 +44,17 @@ const Cart = () => {
     }
   };
 
-  const getCartItem = async () => {
-    try {
-      const response = useTypedSelector(cartList);
-      console.log(response);
-      let total = 0;
-      response.forEach((product: any) => {
-        total += product.price * product.count;
-      });
-      // setData(response);
-      setTotal(Math.ceil(total));
-      setLoading({ value: false, context: '' });
-      console.log(response);
-    } catch (e: any) {
-      console.error('Error fetching cart items:', e);
-      setLoading({ value: false, context: 'oops! page not found' });
-    }
-  };
-
   useEffect(() => {
-    getCartItem();
-  }, []);
+    const count = () => {
+      let val: number = 0;
+      userItem.map((item) => {
+        val += item.count * item.price;
+      });
+      setTotal(Math.ceil(val));
+    };
+    count();
+    setLoading({ value: false, context: '' });
+  }, [cartList]);
 
   const handleClick = () => {};
 
@@ -85,7 +73,7 @@ const Cart = () => {
                   <div className='h-full w-full font-heading p-3 text-4xl'>
                     My cart
                   </div>
-                  {data.length > 0 && (
+                  {userItem.length > 0 && (
                     <div
                       onClick={handleClearCart}
                       className='flex justify-center items-center text-dark dark:text-mid rounded-lg bg-red-500 h-8 w-28 p-1 cursor-pointer'>
@@ -96,10 +84,10 @@ const Cart = () => {
                 <p className='w-[40%] h-[1px] bg-dark'></p>
 
                 <div className='h-[90%] overflow-y-scroll scrollbar-hide'>
-                  {data.length > 0 ? (
-                    data.map((product: any) => (
+                  {userItem.length > 0 ? (
+                    userItem.map((product: any, index) => (
                       <div
-                        key={product.id}
+                        key={index}
                         className='flex justify-between items-center'>
                         <div className='px-2 py-3'>
                           <div className='flex justify-start items-center py-1'>
@@ -117,7 +105,7 @@ const Cart = () => {
                           </div>
                           <div>Total: ${product.price * product.count}</div>
                         </div>
-                        <div className='self-start m-4'>
+                        <div className='self-start m-4 mr-12'>
                           <button
                             onClick={() => handleRemoveItem(product.id)}
                             className='h-6 w-6'>

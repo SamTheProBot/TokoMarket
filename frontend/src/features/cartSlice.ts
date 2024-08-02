@@ -15,8 +15,8 @@ export const userCart = createSlice({
   name: 'cart',
   initialState,
   reducers: {
-    initialdata: (state, action: PayloadAction<UserState>) => {
-      state.push(action.payload);
+    initialdata: (_, action: PayloadAction<UserState[]>) => {
+      return action.payload;
     },
     addItem: (state, action: PayloadAction<UserState>) => {
       return [...state, action.payload];
