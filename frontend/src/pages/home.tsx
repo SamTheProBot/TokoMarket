@@ -3,9 +3,9 @@ import { IproductsData } from '../util/types/products';
 import { useScrollTop } from '../hooks/scrollToTop';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import { motion, AnimatePresence } from 'framer-motion';
+import { fetchUserCart } from '../features/cartSlice';
 import { useTypedDispatch } from '../app/hooks';
-import { initialdata, UserState } from '../features/cartSlice';
-import { setOffset } from '../features/extraSlice';
+import { setOffset, closePanal } from '../features/extraSlice';
 import Loading from '../components/loading';
 import Product from '../components/product';
 import axios from 'axios';
@@ -63,15 +63,6 @@ const Home = () => {
     }
   };
 
-  const getUserCart = async () => {
-    await axios
-      .get<UserState[]>(`${Backend}/api/v1/cart/getitem`, {
-        withCredentials: true,
-      })
-      .then((response) => dispatch(initialdata(response.data)))
-      .catch((e) => new Error(e));
-  };
-
   useEffect(() => {
     if (pageRef.current) {
       const val: number = pageRef.current.offsetTop - 100;
@@ -91,18 +82,20 @@ const Home = () => {
         );
         setData(response.data.getitem);
         setIsLoading(true);
-        getUserCart();
       } catch (e) {
         setIsLoading(false);
         throw e;
       }
     };
+    dispatch(fetchUserCart());
     calldata();
-  }, []);
+  }, [options.page]);
 
   return (
     <>
-      <section className='h-[90vh] w-full bg-mid pt-[4.5rem]'>
+      <section
+        onClick={() => dispatch(closePanal())}
+        className='h-[90vh] w-full bg-mid pt-[4.5rem]'>
         <AnimatePresence mode='wait'>
           <motion.div
             {...FRAMER_PAGE_TRANSITION}
@@ -121,7 +114,9 @@ const Home = () => {
         </AnimatePresence>
       </section>
       <SlidePanal />
-      <section className='h-[37vh] w-full flex justify-center items-center bg-light dark:bg-dark text-dark dark:text-light font-light font-context mb-3'>
+      <section
+        onClick={() => dispatch(closePanal())}
+        className='h-[37vh] w-full flex justify-center items-center bg-light dark:bg-dark text-dark dark:text-light font-light font-context mb-3'>
         <AnimatePresence>
           <motion.div className='h-[60%] w-[45%] flex flex-col justify-around items-center'>
             <div className='font-normal text-2xl tracking-widest'>
@@ -139,6 +134,7 @@ const Home = () => {
       {isLoading ? (
         <>
           <section
+            onClick={() => dispatch(closePanal())}
             className='grid sam grid-cols-3 gap-3 bg-mid dark:bg-dark'
             ref={pageRef}>
             {data.map((item, index) => {

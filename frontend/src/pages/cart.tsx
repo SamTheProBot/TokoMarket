@@ -1,14 +1,16 @@
 import axios from 'axios';
-import { useTypedSelector } from '../app/hooks';
-import { cartList } from '../features/cartSlice';
+import { useTypedSelector, useTypedDispatch } from '../app/hooks';
+import { cartList, fetchUserCart } from '../features/cartSlice';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { FRAMER_CART_ITEM } from '../util/animation/cart';
 import { FRAMER_PAGE_TRANSITION } from '../util/animation/page';
 import Loading from '../components/loading';
 
 const Backend = `http://localhost:5000`;
 
 const Cart = () => {
+  const dispatch = useTypedDispatch();
   const userItem = useTypedSelector(cartList);
   const [total, setTotal] = useState<number>(0);
   const [isLoading, setLoading] = useState<{ value: boolean; context: string }>(
@@ -23,11 +25,10 @@ const Cart = () => {
       await axios.patch(
         // `${window.location.origin}/api/v1/cart/clearitem`,
         `${Backend}/api/v1/cart/clearitem`,
-        {
-          productId: productId,
-        },
+        { productId },
         { withCredentials: true }
       );
+      dispatch(fetchUserCart());
     } catch (e) {
       throw e;
     }
@@ -39,22 +40,24 @@ const Cart = () => {
       await axios.delete(`${Backend}/api/v1/cart/clearcart`, {
         withCredentials: true,
       });
+      dispatch(fetchUserCart());
     } catch (e) {
       throw e;
     }
   };
 
+  const count = () => {
+    let val: number = -1;
+    userItem.map((item) => {
+      val += item.count * item.price;
+    });
+    setTotal(Math.ceil(val));
+  };
+
   useEffect(() => {
-    const count = () => {
-      let val: number = 0;
-      userItem.map((item) => {
-        val += item.count * item.price;
-      });
-      setTotal(Math.ceil(val));
-    };
     count();
     setLoading({ value: false, context: '' });
-  }, [cartList]);
+  }, [userItem]);
 
   const handleClick = () => {};
 
@@ -86,33 +89,38 @@ const Cart = () => {
                 <div className='h-[90%] overflow-y-scroll scrollbar-hide'>
                   {userItem.length > 0 ? (
                     userItem.map((product: any, index) => (
-                      <div
-                        key={index}
-                        className='flex justify-between items-center'>
-                        <div className='px-2 py-3'>
-                          <div className='flex justify-start items-center py-1'>
-                            <div className='relative'>
-                              <img
-                                src={product.image}
-                                alt={product.name}
-                                className='object-cover object-center h-32 w-32'
-                              />
+                      <>
+                        <AnimatePresence mode='wait'>
+                          <motion.div
+                            {...FRAMER_CART_ITEM}
+                            key={product._id}
+                            className='flex justify-between items-center'>
+                            <div className='px-2 py-3'>
+                              <div className='flex justify-start items-center py-1'>
+                                <div className='relative'>
+                                  <img
+                                    src={product.image}
+                                    alt={product.name}
+                                    className='object-cover object-center h-32 w-32'
+                                  />
+                                </div>
+                                <div className='flex flex-col p-2'>
+                                  <span>{product.name}</span>
+                                  <span>${product.price}</span>
+                                </div>
+                              </div>
+                              <div>Total: ${product.price * product.count}</div>
                             </div>
-                            <div className='flex flex-col p-2'>
-                              <span>{product.name}</span>
-                              <span>${product.price}</span>
+                            <div className='self-start m-4 mr-12'>
+                              <button
+                                onClick={() => handleRemoveItem(product._id)}
+                                className='h-6 w-6'>
+                                <img src='garbage.svg' alt='-' />
+                              </button>
                             </div>
-                          </div>
-                          <div>Total: ${product.price * product.count}</div>
-                        </div>
-                        <div className='self-start m-4 mr-12'>
-                          <button
-                            onClick={() => handleRemoveItem(product.id)}
-                            className='h-6 w-6'>
-                            <img src='garbage.svg' alt='-' />
-                          </button>
-                        </div>
-                      </div>
+                          </motion.div>
+                        </AnimatePresence>
+                      </>
                     ))
                   ) : (
                     <div>No products available.</div>

@@ -1,17 +1,42 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FRAMER_PRODUCT_FADE } from '../util/animation/page';
-import { isLoggedIn } from '../features/userSlice';
-import { useTypedSelector } from '../app/hooks';
+import { useTypedDispatch } from '../app/hooks';
+import { fetchUserCart } from '../features/cartSlice';
+import { closePanal, openPanal } from '../features/extraSlice';
+import axios from 'axios';
+
+const Backend = `http://localhost:5000`;
 
 const Product = ({ image, name, price, _id }: any) => {
-  const navigate = useNavigate();
-  const isLogged = useTypedSelector(isLoggedIn);
+  const dispatch = useTypedDispatch();
   const [isHover, setIsHover] = useState<any>(false);
 
-  const handleClick: any = () => {
-    isLogged ? navigate(`/product/${_id}`) : navigate(`/login`);
+  const handelAdditem = async () => {
+    try {
+      const response = await axios.post(
+        // `${window.location.origin}/api/v1/cart/additem`,
+        `${Backend}/api/v1/cart/additem`,
+        {
+          productId: _id,
+          count: 1,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response.status === 200) {
+        dispatch(fetchUserCart());
+        dispatch(openPanal());
+        const time = setTimeout(() => {
+          return dispatch(closePanal());
+        }, 5000);
+        return () => clearTimeout(time);
+      }
+    } catch (e) {
+      throw e;
+    }
   };
 
   return (
@@ -34,7 +59,7 @@ const Product = ({ image, name, price, _id }: any) => {
           <div className='font-normal'>{name}</div>
           <div className='font-light text-dark/70'>${price}</div>
           <button
-            onClick={handleClick}
+            onClick={handelAdditem}
             className={`${
               isHover ? `bg-dark` : `bg-base`
             } w-full text-mid h-10 rounded-sm`}>

@@ -1,5 +1,4 @@
-export const FRAMER_SLIDER = {
-  initial: {
+initial: {
     opacity: 0.1,
     scale: 0.95,
     x: '100%',
@@ -22,19 +21,3 @@ export const FRAMER_SLIDER = {
       ease: 'easeOut',
     },
   },
-};
-
-export const FRAMER_SLIDER_ITEM = {
-  initial: {
-    opacity: 0.1,
-    scale: 0.6,
-  },
-  whileInView: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.15,
-      ease: 'easeIn',
-    },
-  },
-};

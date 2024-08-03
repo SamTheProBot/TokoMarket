@@ -87,39 +87,38 @@ export const addItem = async (req: ExtendedRequset, res: Response) => {
   }
 };
 
-export const editItem = async (req: ExtendedRequset, res: Response) => {
-  const { productId, count } = req.body;
-  const userId = req.user;
+// export const editItem = async (req: ExtendedRequset, res: Response) => {
+//   const { productId, count } = req.body;
+//   const userId = req.user;
 
-  if (!count || !productId || !userId)
-    return res
-      .status(400)
-      .json({ message: `invalid productId or count or userId` });
+//   if (!count || !productId || !userId)
+//     return res
+//       .status(400)
+//       .json({ message: `invalid productId or count or userId` });
 
-  try {
-    const getItem = await ProductSchema.findById({ _id: productId });
-    if (!getItem) return res.status(404).json({ message: 'product not found' });
+//   try {
+//     const getItem = await ProductSchema.findById({ _id: productId });
+//     if (!getItem) return res.status(404).json({ message: 'product not found' });
 
-    const userCart = await CartSchema.findOne({ userId: userId });
-    if (!userCart)
-      return res.status(404).json({ message: `user's cart not found` });
+//     const userCart = await CartSchema.findOne({ userId: userId });
+//     if (!userCart)
+//       return res.status(404).json({ message: `user's cart not found` });
 
-    userCart.cart.find((item) => item.productId.toString() == productId).count =
-      count;
-    await userCart.save();
+//     userCart.cart.find((item) => item.productId.toString() == productId).count =
+//       count;
+//     await userCart.save();
 
-    res.status(200).json({ message: 'product updated' });
-  } catch (e) {
-    res.status(500).json({ message: `server error` });
-  }
-};
+//     res.status(200).json({ message: 'product updated' });
+//   } catch (e) {
+//     res.status(500).json({ message: `server error` });
+//   }
+// };
 
 export const clearItem = async (req: ExtendedRequset, res: Response) => {
   const { productId } = req.body;
   const userId = req.user;
 
   if (!userId) return res.status(400).json({ message: `invalid userId` });
-
   try {
     const getItem = await ProductSchema.findById({ _id: productId });
     if (!getItem) return res.status(404).json({ message: 'product not found' });
@@ -128,7 +127,13 @@ export const clearItem = async (req: ExtendedRequset, res: Response) => {
     if (!userCart)
       return res.status(404).json({ message: `user's cart not found` });
 
-    userCart.cart.filter((item) => item.productId !== productId);
+    const Itemindex = userCart.cart.findIndex(
+      (item) => item.productId.toString() === productId
+    );
+    if (Itemindex === -1)
+      res.status(404).json({ message: 'product not found' });
+
+    userCart.cart.splice(Itemindex, 1);
     await userCart.save();
 
     res.status(200).json({ message: 'item removed' });
